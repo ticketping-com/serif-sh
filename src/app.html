@@ -5,18 +5,6 @@
   <meta charset="utf-8" />
   <link rel="icon" href="%sveltekit.assets%/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script>
-    // Prevent flash of wrong theme by applying dark mode before render
-    (function () {
-      var stored = localStorage.getItem('serifsh_darkMode');
-      var isDark = stored !== null
-        ? stored === 'true'
-        : window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link

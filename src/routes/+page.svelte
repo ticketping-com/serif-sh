@@ -6,13 +6,10 @@
   import FontSelector from '$lib/components/font-selector.svelte';
   import ToggleControl from '$lib/components/toggle-control.svelte';
   import ExportButton from '$lib/components/export-button.svelte';
-  import DarkModeToggle from '$lib/components/dark-mode-toggle.svelte';
   import Toast from '$lib/components/toast.svelte';
   import ResizableFrame from '$lib/components/resizable-frame.svelte';
-  import TicketpingLogoMark from '$lib/components/icons/ticketping-logo-mark.svelte';
-  import TicketpingWordmark from '$lib/components/icons/ticketping-wordmark.svelte';
   import SerifshLogo from '$lib/components/icons/serifsh-logo.svelte';
-  import { showBackground, showQuoteMarks } from '$lib/stores';
+  import { showQuoteMarks } from '$lib/stores';
 
   let frameRef: HTMLDivElement | null = null;
   let toast: { message: string; type?: 'success' | 'error' } | null = null;
@@ -51,10 +48,7 @@
           </div>
         </a> -->
       </div>
-      <div class="flex items-center gap-2">
-        <DarkModeToggle />
-        <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
-      </div>
+      <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
     </div>
   </header>
 
@@ -63,7 +57,7 @@
     <div class="flex flex-col items-center w-full">
       <ResizableFrame>
         {#snippet children()}
-          <div class="overflow-hidden bg-black/20 dark:bg-black/20">
+          <div class="overflow-hidden bg-black/20">
             <QuoteFrame bind:frameRef editable={true} />
           </div>
         {/snippet}
@@ -73,7 +67,7 @@
 
   <!-- Bottom Controls Bar -->
   <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4 pointer-events-none">
-    <div class="flex items-center gap-4 md:gap-6 py-3 md:py-4 px-4 md:px-6 bg-white/95 dark:bg-zinc-900/95 border border-black/10 dark:border-white/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.15)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)] backdrop-blur-xl pointer-events-auto overflow-visible max-w-full">
+    <div class="flex items-center gap-4 md:gap-6 py-3 md:py-4 px-4 md:px-6 bg-white/95 border border-black/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.15)] backdrop-blur-xl pointer-events-auto overflow-visible max-w-full">
       <ThemeSelector />
       <FontSelector />
       <AlignmentControl />

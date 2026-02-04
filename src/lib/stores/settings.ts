@@ -59,14 +59,6 @@ export const selectedThemeId = createHashStore<string>(
 );
 export const selectedTheme = derived(selectedThemeId, ($id) => THEMES[$id] || THEMES.paper);
 
-// Dark mode
-export const darkMode = createHashStore<boolean>(
-  'darkMode',
-  false,
-  (val) => val ? 'true' : 'false',
-  (str) => str === 'true'
-);
-
 // Alignment
 export const alignment = createHashStore<Alignment>(
   'align',

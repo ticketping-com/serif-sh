@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { exportToPng, exportToSvg, copyToClipboard, isPngClipboardSupported } from '$lib/utils/export';
   import { quoteText, authorName } from '$lib/stores/quote';
-  import { selectedThemeId, darkMode, alignment, padding, currentFont, copyShareableUrl } from '$lib/stores';
+  import { selectedThemeId, copyShareableUrl } from '$lib/stores';
   import { get } from 'svelte/store';
   import { browser } from '$app/environment';
 
@@ -39,7 +39,6 @@
           quote: get(quoteText).slice(0, 100), // First 100 chars
           author: get(authorName),
           themeId: get(selectedThemeId),
-          darkMode: get(darkMode),
           timestamp: Date.now(),
         }),
       });
@@ -129,7 +128,7 @@
 
 <div class="relative export-dropdown">
   <button
-    class="flex items-center gap-2 h-8 px-3 bg-parchment-100/80 dark:bg-white/10 border border-parchment-300/50 dark:border-white/10 rounded-lg cursor-pointer transition-all duration-150 hover:bg-parchment-200/80 dark:hover:bg-white/15 text-sm font-medium"
+    class="flex items-center gap-2 h-8 px-3 bg-parchment-100/80 border border-parchment-300/50 rounded-lg cursor-pointer transition-all duration-150 hover:bg-parchment-200/80 text-sm font-medium"
     on:click|stopPropagation={() => showDropdown = !showDropdown}
     disabled={isExporting}
     aria-label="Export options"
@@ -146,10 +145,10 @@
   {#if showDropdown}
     <div
       class="absolute right-0 top-full mt-1 w-44 py-1.5 rounded-xl shadow-lg z-50 backdrop-blur-xl
-        bg-white/95 dark:bg-zinc-900/95 border border-black/10 dark:border-white/10"
+        bg-white/95 border border-black/10"
     >
       <button
-        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5 dark:hover:bg-white/10
+        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5
           flex items-center gap-2.5 transition-colors"
         on:click={handleExportPng}
       >
@@ -159,7 +158,7 @@
         Save as PNG
       </button>
       <button
-        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5 dark:hover:bg-white/10
+        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5
           flex items-center gap-2.5 transition-colors"
         on:click={handleExportSvg}
       >
@@ -170,7 +169,7 @@
       </button>
       {#if clipboardSupported}
         <button
-          class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5 dark:hover:bg-white/10
+          class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5
             flex items-center gap-2.5 transition-colors"
           on:click={handleCopyToClipboard}
         >
@@ -180,9 +179,9 @@
           Copy Image
         </button>
       {/if}
-      <div class="my-1 mx-2 border-t border-black/10 dark:border-white/10"></div>
+      <div class="my-1 mx-2 border-t border-black/10"></div>
       <button
-        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5 dark:hover:bg-white/10
+        class="w-full px-3 py-2 text-left text-[13px] hover:bg-black/5
           flex items-center gap-2.5 transition-colors"
         on:click={handleCopyUrl}
       >

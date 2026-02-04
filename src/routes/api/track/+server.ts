@@ -15,7 +15,6 @@ export const POST: RequestHandler = async ({ request }) => {
       quote: data.quote,
       author: data.author,
       themeId: data.themeId,
-      darkMode: data.darkMode,
     }));
 
     // In production, save to database here

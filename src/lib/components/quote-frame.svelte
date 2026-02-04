@@ -1,7 +1,6 @@
 <script lang="ts">
   import {
     selectedTheme,
-    darkMode,
     alignment,
     padding,
     currentFontCSS,
@@ -9,33 +8,26 @@
     showQuoteMarks
   } from '$lib/stores';
   import { quoteText, authorName } from '$lib/stores/quote';
-  import type { Theme, QuoteStyle } from '$lib/themes';
 
   export let frameRef: HTMLDivElement | null = null;
   export let editable: boolean = true;
 
   $: theme = $selectedTheme;
-  $: isDark = $darkMode;
-  $: bg = isDark ? theme.background.dark : theme.background.light;
-  $: bgImage = theme.backgroundImage ? (isDark ? theme.backgroundImage.dark : theme.backgroundImage.light) : null;
-  $: textColor = isDark ? theme.text.dark : theme.text.light;
-  $: accentColor = isDark ? theme.accent.dark : theme.accent.light;
-  $: quoteMarkColor = isDark ? theme.quoteMark.dark : theme.quoteMark.light;
-  $: borderColor = theme.border ? (isDark ? theme.border.dark : theme.border.light) : 'transparent';
+  $: bg = theme.background;
+  $: bgImage = theme.backgroundImage || null;
+  $: bgSize = theme.backgroundSize || 'cover';
+  $: textColor = theme.text;
+  $: accentColor = theme.accent;
+  $: quoteMarkColor = theme.quoteMark;
+  $: borderColor = theme.border || 'transparent';
   $: isGradient = bg.includes('gradient');
   $: hasBackgroundImage = !!bgImage && $showBackground;
-  $: containerStyle = theme.containerStyle;
 
   $: alignmentClass = {
     'left': 'text-left items-start',
     'center': 'text-center items-center',
     'right': 'text-right items-end',
   }[$alignment];
-
-  // Container background for themes with background images
-  $: containerBg = hasBackgroundImage && containerStyle
-    ? (isDark ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.85)')
-    : 'transparent';
 
   function handleQuoteInput(e: Event) {
     const target = e.target as HTMLElement;
@@ -61,7 +53,7 @@
   style="
     padding: {$padding}px;
     {hasBackgroundImage
-      ? `background-image: ${bgImage}; background-size: cover; background-position: center;`
+      ? `background-color: ${bg}; background-image: ${bgImage}; background-size: ${bgSize}; background-position: center;`
       : isGradient
         ? `background: ${$showBackground ? bg : 'transparent'}`
         : `background-color: ${$showBackground ? bg : 'transparent'}`
@@ -73,23 +65,9 @@
     <div class="transparent-pattern absolute inset-0" data-ignore-in-export></div>
   {/if}
 
-  <!-- Container wrapper for themes with background images -->
-  {#if hasBackgroundImage && containerStyle}
-    <div
-      class="quote-container"
-      class:blur-container={containerStyle.blur}
-      class:rounded-container={containerStyle.rounded}
-      style="background-color: {containerBg};"
-    >
-      <div class="quote-content" style="color: {textColor}">
-        {@render quoteContent()}
-      </div>
-    </div>
-  {:else}
-    <div class="quote-content" style="color: {textColor}">
-      {@render quoteContent()}
-    </div>
-  {/if}
+  <div class="quote-content" style="color: {textColor}">
+    {@render quoteContent()}
+  </div>
 </div>
 
 {#snippet quoteContent()}
@@ -127,7 +105,7 @@
       class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto p-8 rounded-sm w-full"
       style="
         border-left: 4px solid {borderColor};
-        background-color: {isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)'};
+        background-color: rgba(0,0,0,0.02);
       "
     >
       {#if $showQuoteMarks}
@@ -304,24 +282,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .quote-container {
-    position: relative;
-    z-index: 1;
-    padding: 2rem;
-    width: 100%;
-    max-width: 42rem;
-  }
-
-  .blur-container {
-    -webkit-backdrop-filter: blur(12px);
-    backdrop-filter: blur(12px);
-  }
-
-  .rounded-container {
-    border-radius: 1rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .quote-content {

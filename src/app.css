@@ -87,9 +87,6 @@
   }
 }
 
-/* === Dark mode variant === */
-@variant dark (&:where(.dark, .dark *));
-
 /* === Base Styles === */
 html {
   font-family: var(--font-open-runde);
@@ -97,17 +94,7 @@ html {
 
 body {
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Light mode */
-body {
   @apply bg-parchment-50 text-ink-900;
-}
-
-/* Dark mode */
-html.dark body {
-  @apply bg-ink-950 text-parchment-100;
 }
 
 /* Custom scrollbar */
@@ -120,24 +107,12 @@ html.dark body {
   @apply bg-parchment-100;
 }
 
-html.dark ::-webkit-scrollbar-track {
-  @apply bg-ink-900;
-}
-
 ::-webkit-scrollbar-thumb {
   @apply bg-parchment-400 rounded-full;
 }
 
-html.dark ::-webkit-scrollbar-thumb {
-  @apply bg-ink-600 rounded-full;
-}
-
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-parchment-500;
-}
-
-html.dark ::-webkit-scrollbar-thumb:hover {
-  @apply bg-ink-500;
 }
 
 /* Selection */
@@ -145,17 +120,13 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   @apply bg-parchment-300 text-ink-900;
 }
 
-html.dark ::selection {
-  @apply bg-ink-700 text-parchment-100;
-}
-
 /* Focus styles */
 *:focus-visible {
   @apply outline-none ring-2 ring-parchment-500 ring-offset-2;
 }
 
-html.dark *:focus-visible {
-  @apply ring-ink-500 ring-offset-ink-950;
+[contenteditable]:focus-visible {
+  @apply ring-0 ring-offset-0;
 }
 
 /* Transitions */
@@ -179,14 +150,6 @@ html.dark *:focus-visible {
   background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
 }
 
-html.dark .transparent-pattern {
-  background-image:
-    linear-gradient(45deg, #333 25%, transparent 25%),
-    linear-gradient(-45deg, #333 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #333 75%),
-    linear-gradient(-45deg, transparent 75%, #333 75%);
-}
-
 /* Button styles */
 .btn {
   @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
@@ -198,19 +161,9 @@ html.dark .transparent-pattern {
   @apply focus:ring-ink-500;
 }
 
-html.dark .btn-primary {
-  @apply bg-parchment-100 text-ink-900 hover:bg-parchment-200;
-  @apply focus:ring-parchment-400;
-}
-
 .btn-secondary {
   @apply bg-parchment-200 text-ink-800 hover:bg-parchment-300;
   @apply border border-parchment-300;
-}
-
-html.dark .btn-secondary {
-  @apply bg-ink-800 text-parchment-200 hover:bg-ink-700;
-  @apply border-ink-600;
 }
 
 /* Input styles */
@@ -221,12 +174,6 @@ html.dark .btn-secondary {
   @apply focus:border-parchment-500 focus:ring-2 focus:ring-parchment-200;
 }
 
-html.dark .input {
-  @apply bg-ink-900 border-ink-700 text-parchment-100;
-  @apply placeholder:text-ink-500;
-  @apply focus:border-ink-500 focus:ring-ink-700;
-}
-
 /* Textarea styles */
 .textarea {
   @apply w-full px-4 py-3 rounded-lg border transition-all duration-200 resize-none;
@@ -234,12 +181,6 @@ html.dark .input {
   @apply placeholder:text-ink-400;
   @apply focus:border-parchment-500 focus:ring-2 focus:ring-parchment-200;
   font-family: var(--font-open-runde);
-}
-
-html.dark .textarea {
-  @apply bg-ink-900 border-ink-700 text-parchment-100;
-  @apply placeholder:text-ink-500;
-  @apply focus:border-ink-500 focus:ring-ink-700;
 }
 
 /* Theme card hover effect */
@@ -252,19 +193,11 @@ html.dark .textarea {
   @apply ring-ink-900;
 }
 
-html.dark .theme-card.active {
-  @apply ring-parchment-100;
-}
-
 /* Toast notification */
 .toast {
   @apply fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg;
   @apply bg-ink-900 text-parchment-50;
   @apply animate-slide-up;
-}
-
-html.dark .toast {
-  @apply bg-parchment-100 text-ink-900;
 }
 
 /* === Shared Select Component Styles === */
@@ -274,24 +207,15 @@ html.dark .toast {
   gap: 0.5rem;
   height: 32px;
   padding: 0 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   cursor: pointer;
   transition: all 0.15s ease;
   font-size: 0.8125rem;
 }
 
-html:not(.dark) .select-trigger {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
 .select-trigger:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-html:not(.dark) .select-trigger:hover {
   background: rgba(0, 0, 0, 0.06);
 }
 
@@ -306,17 +230,11 @@ html:not(.dark) .select-trigger:hover {
   min-width: 180px;
   max-height: 300px;
   overflow: hidden;
-  background: rgba(30, 30, 30, 0.98);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
-}
-
-html:not(.dark) .select-dropdown {
   background: rgba(255, 255, 255, 0.98);
-  border-color: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(20px);
 }
 
 .scroll-button {
@@ -354,19 +272,10 @@ html:not(.dark) .select-dropdown {
 
 .select-option:hover,
 .select-option[data-highlighted] {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-html:not(.dark) .select-option:hover,
-html:not(.dark) .select-option[data-highlighted] {
   background: rgba(0, 0, 0, 0.05);
 }
 
 .select-option[data-state="checked"] {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-html:not(.dark) .select-option[data-state="checked"] {
   background: rgba(0, 0, 0, 0.08);
 }
 
