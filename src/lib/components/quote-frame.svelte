@@ -29,21 +29,56 @@
     'right': 'text-right items-end',
   }[$alignment];
 
-  function handleQuoteInput(e: Event) {
-    const target = e.target as HTMLElement;
-    quoteText.set(target.innerText);
-  }
-
-  function handleAuthorInput(e: Event) {
-    const target = e.target as HTMLElement;
-    authorName.set(target.innerText);
-  }
-
   function handleKeyDown(e: KeyboardEvent) {
     // Prevent newlines in author field
     if (e.key === 'Enter' && (e.target as HTMLElement).dataset.field === 'author') {
       e.preventDefault();
     }
+  }
+
+  // Use actions instead of reactive text inside contenteditable to prevent cursor resets.
+  // Svelte's reactive {$store} inside contenteditable re-renders the text node on every
+  // keystroke, which destroys the cursor position.
+  function editableQuote(node: HTMLElement) {
+    function onInput() {
+      quoteText.set(node.innerText);
+    }
+
+    const unsub = quoteText.subscribe(val => {
+      if (document.activeElement !== node) {
+        node.textContent = val;
+      }
+    });
+
+    node.addEventListener('input', onInput);
+
+    return {
+      destroy() {
+        unsub();
+        node.removeEventListener('input', onInput);
+      }
+    };
+  }
+
+  function editableAuthor(node: HTMLElement) {
+    function onInput() {
+      authorName.set(node.innerText);
+    }
+
+    const unsub = authorName.subscribe(val => {
+      if (document.activeElement !== node) {
+        node.textContent = val;
+      }
+    });
+
+    node.addEventListener('input', onInput);
+
+    return {
+      destroy() {
+        unsub();
+        node.removeEventListener('input', onInput);
+      }
+    };
   }
 </script>
 
@@ -75,27 +110,27 @@
   {#if theme.quoteStyle === 'classic'}
     <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
       {#if $showQuoteMarks}
-        <span
-          class="text-8xl leading-none font-serif select-none opacity-60 -mb-4"
-          style="color: {quoteMarkColor}"
-        >"</span>
+        <svg class="w-16 h-16 select-none opacity-60 mb-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill={quoteMarkColor}>
+          <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179m10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179"/>
+        </svg>
       {/if}
       <blockquote
         class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
         contenteditable={editable}
-        on:input={handleQuoteInput}
+        use:editableQuote
         on:keydown={handleKeyDown}
         data-placeholder="Enter your quote..."
-      >{$quoteText}</blockquote>
-      <cite
-        class="mt-6 text-base not-italic font-medium outline-none min-h-[1.5em]"
-        style="color: {accentColor}"
-        contenteditable={editable}
-        on:input={handleAuthorInput}
-        on:keydown={handleKeyDown}
-        data-field="author"
-        data-placeholder="Author name"
-      >{#if $authorName}— {$authorName}{/if}</cite>
+      ></blockquote>
+      <div class="mt-6 text-base not-italic font-medium" style="color: {accentColor}">
+        {#if $authorName}<span class="select-none pointer-events-none">— </span>{/if}<cite
+          class="outline-none min-h-[1.5em] inline"
+          contenteditable={editable}
+          use:editableAuthor
+          on:keydown={handleKeyDown}
+          data-field="author"
+          data-placeholder="Author name"
+        ></cite>
+      </div>
     </div>
   {/if}
 
@@ -117,21 +152,21 @@
       <blockquote
         class="text-lg md:text-xl leading-relaxed pl-4 outline-none min-h-[1.5em]"
         contenteditable={editable}
-        on:input={handleQuoteInput}
+        use:editableQuote
         on:keydown={handleKeyDown}
         data-placeholder="Enter your quote..."
-      >{$quoteText}</blockquote>
+      ></blockquote>
       <div class="mt-6 flex items-center gap-3 pl-4">
         <span class="w-8 h-px" style="background-color: {accentColor}"></span>
         <cite
           class="text-sm not-italic font-semibold tracking-wide uppercase outline-none min-h-[1.5em]"
           style="color: {accentColor}"
           contenteditable={editable}
-          on:input={handleAuthorInput}
+          use:editableAuthor
           on:keydown={handleKeyDown}
           data-field="author"
           data-placeholder="AUTHOR"
-        >{$authorName}</cite>
+        ></cite>
       </div>
     </div>
   {/if}
@@ -140,21 +175,21 @@
   {#if theme.quoteStyle === 'minimal'}
     <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
       <blockquote
-        class="text-xl md:text-2xl lg:text-3xl leading-snug font-normal outline-none min-h-[1.5em]"
+        class="text-xl md:text-2xl lg:text-3xl leading-snug font-normal outline-none min-h-[1.5em] {$showQuoteMarks ? 'inline-marks' : ''}"
         contenteditable={editable}
-        on:input={handleQuoteInput}
+        use:editableQuote
         on:keydown={handleKeyDown}
         data-placeholder="Enter your quote..."
-      >{#if $showQuoteMarks}"{/if}{$quoteText}{#if $showQuoteMarks}"{/if}</blockquote>
+      ></blockquote>
       <cite
         class="mt-8 text-sm not-italic tracking-widest uppercase outline-none min-h-[1.5em]"
         style="color: {accentColor}"
         contenteditable={editable}
-        on:input={handleAuthorInput}
+        use:editableAuthor
         on:keydown={handleKeyDown}
         data-field="author"
         data-placeholder="AUTHOR"
-      >{$authorName}</cite>
+      ></cite>
     </div>
   {/if}
 
@@ -175,10 +210,10 @@
       <blockquote
         class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
         contenteditable={editable}
-        on:input={handleQuoteInput}
+        use:editableQuote
         on:keydown={handleKeyDown}
         data-placeholder="Enter your quote..."
-      >{$quoteText}</blockquote>
+      ></blockquote>
 
       <div class="mt-6 flex items-center gap-4 w-full justify-center">
         <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
@@ -186,11 +221,11 @@
           class="text-sm not-italic font-semibold outline-none min-h-[1.5em]"
           style="color: {accentColor}"
           contenteditable={editable}
-          on:input={handleAuthorInput}
+          use:editableAuthor
           on:keydown={handleKeyDown}
           data-field="author"
           data-placeholder="Author"
-        >{$authorName}</cite>
+        ></cite>
         <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
       </div>
 
@@ -218,20 +253,20 @@
         <blockquote
           class="text-2xl md:text-3xl lg:text-4xl leading-tight font-medium relative z-10 outline-none min-h-[1.5em]"
           contenteditable={editable}
-          on:input={handleQuoteInput}
+          use:editableQuote
           on:keydown={handleKeyDown}
           data-placeholder="Enter your quote..."
-        >{$quoteText}</blockquote>
+        ></blockquote>
       </div>
       <div class="mt-8 pt-4" style="border-top: 2px solid {borderColor}">
         <cite
           class="text-base not-italic font-bold outline-none min-h-[1.5em]"
           contenteditable={editable}
-          on:input={handleAuthorInput}
+          use:editableAuthor
           on:keydown={handleKeyDown}
           data-field="author"
           data-placeholder="Author"
-        >{$authorName}</cite>
+        ></cite>
       </div>
     </div>
   {/if}
@@ -252,24 +287,58 @@
           <blockquote
             class="text-lg md:text-xl leading-relaxed outline-none min-h-[1.5em]"
             contenteditable={editable}
-            on:input={handleQuoteInput}
+            use:editableQuote
             on:keydown={handleKeyDown}
             data-placeholder="Enter your quote..."
-          >{$quoteText}</blockquote>
-          <cite
-            class="mt-4 text-sm not-italic font-medium flex items-center gap-2 outline-none min-h-[1.5em]"
+          ></blockquote>
+          <div
+            class="mt-4 text-sm not-italic font-medium flex items-center gap-2"
             style="color: {accentColor}"
-            contenteditable={editable}
-            on:input={handleAuthorInput}
-            on:keydown={handleKeyDown}
-            data-field="author"
-            data-placeholder="Author"
           >
-            <span class="w-6 h-0.5 rounded-full" style="background-color: {quoteMarkColor}"></span>
-            {$authorName}
-          </cite>
+            <span class="w-6 h-0.5 rounded-full shrink-0" style="background-color: {quoteMarkColor}"></span>
+            <cite
+              class="outline-none min-h-[1.5em]"
+              contenteditable={editable}
+              use:editableAuthor
+              on:keydown={handleKeyDown}
+              data-field="author"
+              data-placeholder="Author"
+            ></cite>
+          </div>
         </div>
       </div>
+    </div>
+  {/if}
+
+  <!-- Elegant Style -->
+  {#if theme.quoteStyle === 'elegant'}
+    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
+      {#if $showQuoteMarks}
+        <span
+          class="leading-none font-serif select-none -mb-12"
+          style="color: {quoteMarkColor}; font-size: 10rem;"
+        >&ldquo;</span>
+      {/if}
+      <blockquote
+        class="text-2xl md:text-3xl leading-relaxed outline-none min-h-[1.5em]"
+        contenteditable={editable}
+        use:editableQuote
+        on:keydown={handleKeyDown}
+        data-placeholder="Enter your quote..."
+      ></blockquote>
+      <span
+        class="block w-12 h-px mt-10 mb-6"
+        style="background-color: {borderColor}"
+      ></span>
+      <cite
+        class="text-sm not-italic font-normal tracking-[0.25em] uppercase outline-none min-h-[1.5em] font-sans"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR NAME"
+      ></cite>
     </div>
   {/if}
 {/snippet}
@@ -300,5 +369,13 @@
 
   [contenteditable] {
     cursor: text;
+  }
+
+  :global(.inline-marks::before) {
+    content: '\201C';
+  }
+
+  :global(.inline-marks::after) {
+    content: '\201D';
   }
 </style>

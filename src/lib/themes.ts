@@ -1,4 +1,4 @@
-export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern';
+export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern' | 'elegant';
 export type Alignment = 'left' | 'center' | 'right';
 export type FontFamily = 'playfair' | 'crimson' | 'source-serif' | 'libre';
 
@@ -86,6 +86,28 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#c4a882',
     border: '#b8a082',
     shadow: true,
+    font: 'playfair',
+  },
+  noir: {
+    id: 'noir',
+    name: 'Noir',
+    quoteStyle: 'elegant',
+    background: '#000000',
+    text: '#ffffff',
+    accent: '#ffffff',
+    quoteMark: '#c9943c',
+    border: '#c9943c',
+    font: 'playfair',
+  },
+  lumiere: {
+    id: 'lumiere',
+    name: 'Lumière',
+    quoteStyle: 'elegant',
+    background: '#ffffff',
+    text: '#1a1a1a',
+    accent: '#1a1a1a',
+    quoteMark: '#c9943c',
+    border: '#c9943c',
     font: 'playfair',
   },
 };
