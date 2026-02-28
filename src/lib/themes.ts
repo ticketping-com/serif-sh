@@ -1,12 +1,13 @@
-export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern' | 'elegant';
+export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern' | 'elegant' | 'brutalist';
 export type Alignment = 'left' | 'center' | 'right';
-export type FontFamily = 'playfair' | 'crimson' | 'source-serif' | 'libre';
+export type FontFamily = 'playfair' | 'crimson' | 'source-serif' | 'libre' | 'sans';
 
 export interface Theme {
   id: string;
   name: string;
   quoteStyle: QuoteStyle;
   background: string;
+  cardBackground?: string;
   text: string;
   accent: string;
   quoteMark: string;
@@ -35,6 +36,10 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
     name: 'Libre Baskerville',
     css: '"Libre Baskerville", serif',
   },
+  'sans': {
+    name: 'Geist Sans',
+    css: '"Geist", sans-serif',
+  }
 };
 
 export const THEMES: Record<string, Theme> = {
@@ -110,6 +115,34 @@ export const THEMES: Record<string, Theme> = {
     border: '#c9943c',
     font: 'playfair',
   },
+  "vercel-dark": {
+    id: 'vercel-dark',
+    name: 'Vercel Dark',
+    quoteStyle: 'brutalist',
+    background: '#000000',
+    backgroundImage: 'url(/vercel-dark-bg.jpg)',
+    backgroundSize: 'cover',
+    cardBackground: '#000000',
+    text: '#ffffff',
+    accent: '#A0A0A0',
+    quoteMark: '#0070F3',
+    border: '#FFFFFF20',
+    font: 'sans',
+  },
+  "vercel-light": {
+    id: 'vercel-light',
+    name: 'Vercel Light',
+    quoteStyle: 'brutalist',
+    background: '#ffffff',
+    backgroundImage: 'url(/vercel-light-bg.jpg)',
+    backgroundSize: 'cover',
+    cardBackground: '#ffffff',
+    text: '#111827',
+    accent: '#666666',
+    quoteMark: '#0070F3',
+    border: '#0000001A',
+    font: 'sans',
+  }
 };
 
 export const PADDING_PRESETS = [32, 64, 96, 128];
