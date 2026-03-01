@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 /* === OpenRunde Font Faces === */
@@ -44,6 +43,7 @@
   --font-open-runde: "Open Runde", system-ui, sans-serif;
   /* Quote styling fonts */
   --font-geist: "Geist", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
   --font-playfair: "Playfair Display", serif;
   --font-crimson: "Crimson Pro", serif;
   --font-source-serif: "Source Serif 4", serif;

@@ -1,6 +1,6 @@
-export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern' | 'elegant' | 'brutalist';
+export type QuoteStyle = 'classic' | 'goodreads' | 'minimal' | 'editorial' | 'decorative' | 'modern' | 'elegant' | 'brutalist' | "startup";
 export type Alignment = 'left' | 'center' | 'right';
-export type FontFamily = 'playfair' | 'crimson' | 'source-serif' | 'libre' | 'sans';
+export type FontFamily = 'playfair' | 'crimson' | 'source-serif' | 'libre' | 'sans' | 'roboto';
 
 export interface Theme {
   id: string;
@@ -39,6 +39,10 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
   'sans': {
     name: 'Geist Sans',
     css: '"Geist", sans-serif',
+  },
+  'roboto': {
+    name: 'Roboto',
+    css: '"Roboto", sans-serif',
   }
 };
 
@@ -142,6 +146,28 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#0070F3',
     border: '#0000001A',
     font: 'sans',
+  },
+  "peerlist-dark": {
+    id: 'peerlist-dark',
+    name: 'Peerlist Dark',
+    quoteStyle: 'startup',
+    background: "#171717",
+    text: "#fafafa",
+    accent: "#A0A0A0",
+    quoteMark: "#00AA45",
+    border: "#FFFFFF20",
+    font: "roboto",
+  },
+  "peerlist-light": {
+    id: 'peerlist-light',
+    name: 'Peerlist Light',
+    quoteStyle: 'startup',
+    background: "#FFFFFF",
+    text: "#0d0d0d",
+    accent: "#666666",
+    quoteMark: "#00AA45",
+    border: "#0000001A",
+    font: "roboto",
   }
 };
 
