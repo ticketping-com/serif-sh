@@ -5,7 +5,8 @@
     padding,
     currentFontCSS,
     showBackground,
-    showQuoteMarks
+    showQuoteMarks,
+    showBrandLogo
   } from '$lib/stores'
   import { quoteText, authorName } from '$lib/stores/quote'
   import VercelWordmark from './icons/vercel-wordmark.svelte'
@@ -432,7 +433,7 @@
             tabindex="0"
           ></cite>
 
-          {#if theme.id.includes('vercel')}
+          {#if $showBrandLogo}
             <span class="mx-3 text-lg opacity-40 font-light" style="color: {accentColor}">|</span>
             <VercelWordmark color={textColor} size={60} />
           {/if}
@@ -486,7 +487,7 @@
           tabindex="0"
         ></cite>
 
-        {#if theme.id.includes('peerlist')}
+        {#if $showBrandLogo}
           <span class="mr-4 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
           <PeerlistWordMark color={textColor} size={60} />
         {/if}

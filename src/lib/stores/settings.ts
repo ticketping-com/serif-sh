@@ -119,3 +119,5 @@ export function copyShareableUrl(): string {
   }
   return '';
 }
+
+export const showBrandLogo = writable<boolean>(true);

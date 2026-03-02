@@ -1,4 +1,8 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<script lang="ts">
+  export let size: number = 16
+</script>
+
+<svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
   <path
     d="M7.9633 0C1.76962 0 0 1.77778 0 8C0 14.2222 1.77405 16 7.9633 16C14.1526 16 15.9266 14.2222 15.9266 8C15.9266 1.77778 14.1526 0 7.9633 0Z"
     fill="#00AA45"
