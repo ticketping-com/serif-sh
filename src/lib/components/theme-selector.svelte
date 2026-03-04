@@ -13,20 +13,18 @@
   }
 
   //Group the brand themes
-  const groupedOptions = []
+  const groupedOptions: any[] = []
   const brandSeen = new Set()
 
   themes.forEach((theme) => {
-    const isBrand = theme.id.includes('vercel') || theme.id.includes('peerlist')
-
-    if (isBrand) {
-      const baseId = theme.id.split('-')[0]
-      if (!brandSeen.has(baseId)) {
-        brandSeen.add(baseId)
+    if (theme.brand) {
+      if (!brandSeen.has(theme.brand)) {
+        brandSeen.add(theme.brand)
         groupedOptions.push({
-          value: baseId,
-          label: baseId.charAt(0).toUpperCase() + baseId.slice(1),
-          preview: getThemePreviewBg(theme)
+          value: theme.brand,
+          label: theme.brand.charAt(0).toUpperCase() + theme.brand.slice(1),
+          preview: getThemePreviewBg(theme),
+          brand: theme.brand
         })
       }
     } else {
@@ -38,10 +36,7 @@
     }
   })
 
-  $: currentValue =
-    $selectedThemeId.includes('vercel') || $selectedThemeId.includes('peerlist')
-      ? $selectedThemeId.split('-')[0]
-      : $selectedThemeId
+  $: currentValue = THEMES[$selectedThemeId]?.brand || $selectedThemeId
 
   function handleChange(value: string) {
     if (value === 'vercel') {

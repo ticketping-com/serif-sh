@@ -1,6 +1,7 @@
 export type QuoteStyle = 'brutalist' | "startup" | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
 export type FontFamily = 'playfair' | 'crimson' | 'sans' | 'roboto'| 'inter'|'mono';
+export type Brand = 'vercel' | 'peerlist';
 
 export interface Theme {
   id: string;
@@ -14,20 +15,13 @@ export interface Theme {
   border?: string;
   shadow?: boolean;
   font: FontFamily;
+  brand?: Brand;
   // Background image support
   backgroundImage?: string;
   backgroundSize?: string;
 }
 
 export const FONTS: Record<FontFamily, { name: string; css: string }> = {
-  'playfair': {
-    name: 'Playfair Display',
-    css: '"Playfair Display", serif',
-  },
-  'crimson': {
-    name: 'Crimson Pro',
-    css: '"Crimson Pro", serif',
-  },
   'sans': {
     name: 'Geist Sans',
     css: '"Geist", sans-serif',
@@ -39,6 +33,14 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
   'inter': {
     name: 'Inter',
     css: '"Inter", sans-serif',
+  },
+   'playfair': {
+    name: 'Playfair Display',
+    css: '"Playfair Display", serif',
+  },
+  'crimson': {
+    name: 'Crimson Pro',
+    css: '"Crimson Pro", serif',
   },
   'mono': {
     name: 'JetBrains Mono',
@@ -60,6 +62,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#0070F3',
     border: '#FFFFFF20',
     font: 'sans',
+    brand: 'vercel',
   },
   "vercel-light": {
     id: 'vercel-light',
@@ -74,6 +77,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#0070F3',
     border: '#0000001A',
     font: 'sans',
+    brand: 'vercel',
   },
   "peerlist-dark": {
     id: 'peerlist-dark',
@@ -85,6 +89,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: "#00AA45",
     border: "#FFFFFF20",
     font: "roboto",
+    brand: 'peerlist',
   },
   "peerlist-light": {
     id: 'peerlist-light',
@@ -96,6 +101,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: "#00AA45",
     border: "#0000001A",
     font: "roboto",
+    brand: 'peerlist',
   },
   "editorial": {
     id: 'editorial',
@@ -128,7 +134,7 @@ export const THEMES: Record<string, Theme> = {
     backgroundImage:'linear-gradient(0deg, rgba(162, 89, 255, 0.5), rgb(255, 135, 38))',
     background: '#FFFFFF',
     cardBackground: '#FFFFFF80',
-    text: '#000000',
+    text: '#514437',
     accent: '#666666',
     quoteMark: '#FF943E99',
     border: '#FF943E99',

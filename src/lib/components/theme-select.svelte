@@ -11,6 +11,7 @@
     value: string
     label: string
     preview: string
+    brand?: string
     disabled?: boolean
   }
 
@@ -24,7 +25,6 @@
   let { value = $bindable(), label = '', options, handleValueChange }: Props = $props()
 
   const selectedOption = $derived(options.find((item) => item.value === value))
-  const selectedPreview = $derived(selectedOption?.preview || '')
 
   function onValueChange(val: string | string[]) {
     if (typeof val === 'string' && handleValueChange) {
@@ -33,21 +33,27 @@
   }
 </script>
 
+{#snippet themeIcon(option: ThemeOption)}
+  {#if option.brand === 'vercel' || option.value === 'vercel'}
+    <VercelLogoMark size={16} />
+  {:else if option.brand === 'peerlist' || option.value === 'peerlist'}
+    <PeerlistLogoMark size={16} />
+  {:else}
+    <span
+      class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#A8A8A8]"
+      style="background: {option.preview};"
+    ></span>
+  {/if}
+{/snippet}
+
 <div class="flex flex-col gap-1.5">
   {#if label}
     <span class="text-[10px] font-medium uppercase tracking-wide opacity-50">{label}</span>
   {/if}
   <Select.Root type="single" bind:value={value as never} {onValueChange}>
     <Select.Trigger class="select-trigger" aria-label="Select theme">
-      {#if value === 'vercel'}
-        <VercelLogoMark size={16} />
-      {:else if value === 'peerlist'}
-        <PeerlistLogoMark size={16} />
-      {:else}
-        <span
-          class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#A8A8A8] "
-          style="background: {selectedPreview};"
-        ></span>
+      {#if selectedOption}
+        {@render themeIcon(selectedOption)}
       {/if}
       <CaretDown class="chevron" />
     </Select.Trigger>
@@ -66,16 +72,7 @@
             >
               {#snippet children({ selected })}
                 <div class="option-content">
-                  {#if option.value === 'vercel'}
-                    <VercelLogoMark size={16} />
-                  {:else if option.value === 'peerlist'}
-                    <PeerlistLogoMark size={16} />
-                  {:else}
-                    <span
-                      class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#EAEAEA]"
-                      style="background: {option.preview};"
-                    ></span>
-                  {/if}
+                  {@render themeIcon(option)}
                   <span class="option-label">{option.label}</span>
                   {#if selected}
                     <Check class="check-icon" />
