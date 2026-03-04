@@ -102,264 +102,27 @@
     <div class="transparent-pattern absolute inset-0" data-ignore-in-export></div>
   {/if}
 
+  {#if theme.quoteStyle === 'aura' && $showBackground}
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="absolute inset-0 bg-white/50"></div>
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_bottom,#A259FF_0%,#A259FF_65%,rgba(255,255,255,0.65)_100%)] opacity-60"
+      ></div>
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_bottom,#FF8726_0%,rgba(255,255,255,0.65)_100%)] opacity-60"
+      ></div>
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_300px_at_50%_-15%,transparent_20%,white_70%,transparent_85%,white_100%)] opacity-50 mix-blend-soft-light"
+      ></div>
+    </div>
+  {/if}
+
   <div class="quote-content" style="color: {textColor}">
     {@render quoteContent()}
   </div>
 </div>
 
 {#snippet quoteContent()}
-  <!-- Classic Style -->
-  {#if theme.quoteStyle === 'classic'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      {#if $showQuoteMarks}
-        <svg
-          class="w-16 h-16 select-none opacity-60 mb-4"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill={quoteMarkColor}
-        >
-          <path
-            d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179m10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179"
-          />
-        </svg>
-      {/if}
-      <blockquote
-        class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <div class="mt-6 text-base not-italic font-medium" style="color: {accentColor}">
-        {#if $authorName}<span class="select-none pointer-events-none">— </span>{/if}<cite
-          class="outline-none min-h-[1.5em] inline"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author name"
-          role="textbox"
-          tabindex="0"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Goodreads Style -->
-  {#if theme.quoteStyle === 'goodreads'}
-    <div
-      class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto p-8 rounded-sm w-full"
-      style="
-        border-left: 4px solid {borderColor};
-        background-color: rgba(0,0,0,0.02);
-      "
-    >
-      {#if $showQuoteMarks}
-        <span
-          class="text-6xl leading-none font-serif select-none absolute -top-2 -left-1 opacity-40"
-          style="color: {quoteMarkColor}">"</span
-        >
-      {/if}
-      <blockquote
-        class="text-lg md:text-xl leading-relaxed pl-4 outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <div class="mt-6 flex items-center gap-3 pl-4">
-        <span class="w-8 h-px" style="background-color: {accentColor}"></span>
-        <cite
-          class="text-sm not-italic font-semibold tracking-wide uppercase outline-none min-h-[1.5em]"
-          style="color: {accentColor}"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="AUTHOR"
-          role="textbox"
-          tabindex="0"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Minimal Style -->
-  {#if theme.quoteStyle === 'minimal'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      <blockquote
-        class="text-xl md:text-2xl lg:text-3xl leading-snug font-normal outline-none min-h-[1.5em] {$showQuoteMarks
-          ? 'inline-marks'
-          : ''}"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <cite
-        class="mt-8 text-sm not-italic tracking-widest uppercase outline-none min-h-[1.5em]"
-        style="color: {accentColor}"
-        contenteditable={editable}
-        use:editableAuthor
-        on:keydown={handleKeyDown}
-        data-field="author"
-        data-placeholder="AUTHOR"
-        role="textbox"
-        tabindex="0"
-      ></cite>
-    </div>
-  {/if}
-
-  <!-- Decorative Style -->
-  {#if theme.quoteStyle === 'decorative'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto p-6 w-full">
-      <!-- Top decorative element -->
-      <div class="flex items-center gap-4 mb-6 w-full justify-center">
-        <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-        {#if $showQuoteMarks}
-          <span class="text-4xl font-serif" style="color: {quoteMarkColor}">❝</span>
-        {/if}
-        <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-      </div>
-
-      <blockquote
-        class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-
-      <div class="mt-6 flex items-center gap-4 w-full justify-center">
-        <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
-        <cite
-          class="text-sm not-italic font-semibold outline-none min-h-[1.5em]"
-          style="color: {accentColor}"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author"
-          role="textbox"
-          tabindex="0"
-        ></cite>
-        <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
-      </div>
-
-      <!-- Bottom decorative element -->
-      {#if $showQuoteMarks}
-        <div class="flex items-center gap-4 mt-6 w-full justify-center">
-          <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-          <span class="text-4xl font-serif rotate-180" style="color: {quoteMarkColor}">❝</span>
-          <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-        </div>
-      {/if}
-    </div>
-  {/if}
-
-  <!-- Editorial Style -->
-  {#if theme.quoteStyle === 'editorial'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      <div class="relative">
-        {#if $showQuoteMarks}
-          <span
-            class="text-9xl leading-none font-serif select-none absolute -top-8 -left-6 opacity-20"
-            style="color: {quoteMarkColor}">"</span
-          >
-        {/if}
-        <blockquote
-          class="text-2xl md:text-3xl lg:text-4xl leading-tight font-medium relative z-10 outline-none min-h-[1.5em]"
-          contenteditable={editable}
-          use:editableQuote
-          on:keydown={handleKeyDown}
-          data-placeholder="Enter your quote..."
-        ></blockquote>
-      </div>
-      <div class="mt-8 pt-4" style="border-top: 2px solid {borderColor}">
-        <cite
-          class="text-base not-italic font-bold outline-none min-h-[1.5em]"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author"
-          role="textbox"
-          tabindex="0"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Modern Style -->
-  {#if theme.quoteStyle === 'modern'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      <div class="flex gap-4">
-        {#if $showQuoteMarks}
-          <span class="text-5xl leading-none font-bold shrink-0" style="color: {quoteMarkColor}"
-            >"</span
-          >
-        {/if}
-        <div class="flex flex-col">
-          <blockquote
-            class="text-lg md:text-xl leading-relaxed outline-none min-h-[1.5em]"
-            contenteditable={editable}
-            use:editableQuote
-            on:keydown={handleKeyDown}
-            data-placeholder="Enter your quote..."
-          ></blockquote>
-          <div
-            class="mt-4 text-sm not-italic font-medium flex items-center gap-2"
-            style="color: {accentColor}"
-          >
-            <span class="w-6 h-0.5 rounded-full shrink-0" style="background-color: {quoteMarkColor}"
-            ></span>
-            <cite
-              class="outline-none min-h-[1.5em]"
-              contenteditable={editable}
-              use:editableAuthor
-              on:keydown={handleKeyDown}
-              data-field="author"
-              data-placeholder="Author"
-              role="textbox"
-              tabindex="0"
-            ></cite>
-          </div>
-        </div>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Elegant Style -->
-  {#if theme.quoteStyle === 'elegant'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      {#if $showQuoteMarks}
-        <span
-          class="leading-none font-serif select-none -mb-12"
-          style="color: {quoteMarkColor}; font-size: 10rem;">&ldquo;</span
-        >
-      {/if}
-      <blockquote
-        class="text-2xl md:text-3xl leading-relaxed outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <span class="block w-12 h-px mt-10 mb-6" style="background-color: {borderColor}"></span>
-      <cite
-        class="text-sm not-italic font-normal tracking-[0.25em] uppercase outline-none min-h-[1.5em] font-sans"
-        style="color: {accentColor}"
-        contenteditable={editable}
-        use:editableAuthor
-        on:keydown={handleKeyDown}
-        data-field="author"
-        data-placeholder="AUTHOR NAME"
-        role="textbox"
-        tabindex="0"
-      ></cite>
-    </div>
-  {/if}
-
   <!-- Brutalist themes -->
   {#if theme.quoteStyle === 'brutalist'}
     <div
@@ -491,6 +254,305 @@
           <span class="mr-4 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
           <PeerlistWordMark color={textColor} size={60} />
         {/if}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Editorial theme -->
+  {#if theme.quoteStyle === 'editorial'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {#if $showQuoteMarks}
+        <svg
+          width="40"
+          height="29"
+          viewBox="0 0 40 29"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-10 h-10 mb-8 shrink-0"
+        >
+          <path
+            d="M15.0225 15.7243C12.3947 13.2525 8.31954 12.7186 5.69977 15.0925C6.79979 11.2247 9.74602 7.28017 12.6746 4.45565C15.0949 2.12093 11.4298 -1.59014 9.01429 0.739687C3.12182 6.41975 -3.58761 17.1562 2.24374 25.1187C4.89567 28.7384 10.2253 30.371 14.0833 27.6184C17.8996 24.8951 18.514 19.0093 15.0225 15.7243ZM37.6982 15.7243C35.0704 13.2525 30.9952 12.7186 28.3755 15.0925C29.4755 11.2247 32.4217 7.28017 35.3503 4.45565C37.7706 2.12093 34.1055 -1.59014 31.69 0.739687C25.7975 6.42138 19.0881 17.1578 24.921 25.1187C27.573 28.7384 32.9026 30.371 36.7607 27.6184C40.5753 24.8951 41.1897 19.0093 37.6982 15.7243Z"
+            fill={quoteMarkColor}
+          />
+        </svg>
+      {/if}
+
+      <blockquote
+        class="text-xl md:text-2xl font-normal italic leading-relaxed outline-none min-h-[1.5em] w-full"
+        contenteditable={editable}
+        use:editableQuote
+        on:keydown={handleKeyDown}
+        data-placeholder="Enter your quote..."
+      ></blockquote>
+
+      <div class="w-full h-px mt-12 mb-6" style="background-color: {borderColor};"></div>
+
+      <cite
+        class="text-sm font-medium uppercase tracking-wider outline-none min-h-[1.5em] not-italic mr-4"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR"
+        role="textbox"
+        tabindex="0"
+      ></cite>
+    </div>
+  {/if}
+
+  <!-- Breeze theme -->
+  {#if theme.quoteStyle === 'breeze'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      style="background-color: {theme.cardBackground || bg};"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {#if $showQuoteMarks}
+          <svg
+            width="35"
+            height="28"
+            viewBox="0 0 35 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-10 h-10 mb-4 md:mb-8 shrink-0"
+          >
+            <path
+              d="M7.45677 12.1032C6.68258 12.1032 5.98968 12.1394 5.36774 12.2065C6.40258 7.97161 8.88645 6.00516 12.5045 4.41935L10.5665 0C6.96387 1.58065 4.60516 3.39097 2.91613 5.87226C0.954839 8.75613 0 12.5458 0 17.4606V19.5845C0 23.6916 0.0141936 27.0168 7.45677 27.0168C14.9135 27.0168 14.9135 23.6787 14.9135 19.56C14.9135 15.4426 14.9613 12.1032 7.45677 12.1032ZM27.0697 12.1032C26.2955 12.1032 25.6026 12.1394 24.9806 12.2065C26.0155 7.97161 28.4994 6.00516 32.1174 4.41935L30.1794 0C26.5768 1.58065 24.2181 3.39097 22.529 5.87226C20.5677 8.75613 19.6129 12.5458 19.6129 17.4606V19.5845C19.6129 23.6916 19.6271 27.0168 27.0697 27.0168C34.5265 27.0168 34.5265 23.6787 34.5265 19.56C34.5265 15.4426 34.5742 12.1032 27.0697 12.1032Z"
+              fill={quoteMarkColor}
+            />
+          </svg>
+        {/if}
+
+        <blockquote
+          class="text-xl md:text-2xl lg:text-3xl font-medium leading-snug outline-none min-h-[1.5em] w-full"
+          contenteditable={editable}
+          use:editableQuote
+          on:keydown={handleKeyDown}
+          data-placeholder="Enter your quote..."
+        ></blockquote>
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      <cite
+        class="text-base font-medium uppercase tracking-wider outline-none min-h-[1.5em] mr-4"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR"
+        role="textbox"
+        tabindex="0"
+      ></cite>
+    </div>
+  {/if}
+
+  <!-- Aura theme -->
+  {#if theme.quoteStyle === 'aura'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      style="background-color: {theme.cardBackground || bg};"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {#if $showQuoteMarks}
+          <svg
+            width="35"
+            height="28"
+            viewBox="0 0 35 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-10 h-10 mb-4 md:mb-8 shrink-0"
+          >
+            <path
+              d="M7.45677 12.1032C6.68258 12.1032 5.98968 12.1394 5.36774 12.2065C6.40258 7.97161 8.88645 6.00516 12.5045 4.41935L10.5665 0C6.96387 1.58065 4.60516 3.39097 2.91613 5.87226C0.954839 8.75613 0 12.5458 0 17.4606V19.5845C0 23.6916 0.0141936 27.0168 7.45677 27.0168C14.9135 27.0168 14.9135 23.6787 14.9135 19.56C14.9135 15.4426 14.9613 12.1032 7.45677 12.1032ZM27.0697 12.1032C26.2955 12.1032 25.6026 12.1394 24.9806 12.2065C26.0155 7.97161 28.4994 6.00516 32.1174 4.41935L30.1794 0C26.5768 1.58065 24.2181 3.39097 22.529 5.87226C20.5677 8.75613 19.6129 12.5458 19.6129 17.4606V19.5845C19.6129 23.6916 19.6271 27.0168 27.0697 27.0168C34.5265 27.0168 34.5265 23.6787 34.5265 19.56C34.5265 15.4426 34.5742 12.1032 27.0697 12.1032Z"
+              fill={quoteMarkColor}
+            />
+          </svg>
+        {/if}
+
+        <blockquote
+          class="text-xl md:text-2xl lg:text-3xl font-medium leading-snug outline-none min-h-[1.5em] w-full"
+          contenteditable={editable}
+          use:editableQuote
+          on:keydown={handleKeyDown}
+          data-placeholder="Enter your quote..."
+        ></blockquote>
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      <cite
+        class="text-sm font-semibold uppercase tracking-widest outline-none min-h-[1.5em] not-italic"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR"
+        role="textbox"
+        tabindex="0"
+      ></cite>
+    </div>
+  {/if}
+
+  <!-- Noir theme -->
+  {#if theme.quoteStyle === 'noir'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {#if $showQuoteMarks}
+        <svg
+          width="40"
+          height="29"
+          viewBox="0 0 40 29"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-10 h-10 mb-8 shrink-0"
+        >
+          <path
+            d="M15.0225 15.7243C12.3947 13.2525 8.31954 12.7186 5.69977 15.0925C6.79979 11.2247 9.74602 7.28017 12.6746 4.45565C15.0949 2.12093 11.4298 -1.59014 9.01429 0.739687C3.12182 6.41975 -3.58761 17.1562 2.24374 25.1187C4.89567 28.7384 10.2253 30.371 14.0833 27.6184C17.8996 24.8951 18.514 19.0093 15.0225 15.7243ZM37.6982 15.7243C35.0704 13.2525 30.9952 12.7186 28.3755 15.0925C29.4755 11.2247 32.4217 7.28017 35.3503 4.45565C37.7706 2.12093 34.1055 -1.59014 31.69 0.739687C25.7975 6.42138 19.0881 17.1578 24.921 25.1187C27.573 28.7384 32.9026 30.371 36.7607 27.6184C40.5753 24.8951 41.1897 19.0093 37.6982 15.7243Z"
+            fill={quoteMarkColor}
+          />
+        </svg>
+      {/if}
+
+      <blockquote
+        class="text-xl md:text-2xl font-normal leading-relaxed outline-none min-h-[1.5em] w-full"
+        contenteditable={editable}
+        use:editableQuote
+        on:keydown={handleKeyDown}
+        data-placeholder="Enter your quote..."
+      ></blockquote>
+
+      <div class="w-full h-px mt-12 mb-6" style="background-color: {borderColor};"></div>
+
+      <cite
+        class="text-sm font-medium uppercase tracking-wider outline-none min-h-[1.5em] not-italic mr-4"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR"
+        role="textbox"
+        tabindex="0"
+      ></cite>
+    </div>
+  {/if}
+
+  <!-- Glass theme -->
+  {#if theme.quoteStyle === 'glass'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl glassmorphism"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {#if $showQuoteMarks}
+          <svg
+            width="35"
+            height="28"
+            viewBox="0 0 35 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-10 h-10 mb-4 md:mb-8 shrink-0"
+          >
+            <path
+              d="M7.45677 12.1032C6.68258 12.1032 5.98968 12.1394 5.36774 12.2065C6.40258 7.97161 8.88645 6.00516 12.5045 4.41935L10.5665 0C6.96387 1.58065 4.60516 3.39097 2.91613 5.87226C0.954839 8.75613 0 12.5458 0 17.4606V19.5845C0 23.6916 0.0141936 27.0168 7.45677 27.0168C14.9135 27.0168 14.9135 23.6787 14.9135 19.56C14.9135 15.4426 14.9613 12.1032 7.45677 12.1032ZM27.0697 12.1032C26.2955 12.1032 25.6026 12.1394 24.9806 12.2065C26.0155 7.97161 28.4994 6.00516 32.1174 4.41935L30.1794 0C26.5768 1.58065 24.2181 3.39097 22.529 5.87226C20.5677 8.75613 19.6129 12.5458 19.6129 17.4606V19.5845C19.6129 23.6916 19.6271 27.0168 27.0697 27.0168C34.5265 27.0168 34.5265 23.6787 34.5265 19.56C34.5265 15.4426 34.5742 12.1032 27.0697 12.1032Z"
+              fill={quoteMarkColor}
+            />
+          </svg>
+        {/if}
+
+        <blockquote
+          class="text-xl md:text-2xl lg:text-3xl font-medium leading-snug outline-none min-h-[1.5em] w-full"
+          contenteditable={editable}
+          use:editableQuote
+          on:keydown={handleKeyDown}
+          data-placeholder="Enter your quote..."
+        ></blockquote>
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      <cite
+        class="text-base font-medium uppercase tracking-wider outline-none min-h-[1.5em] mr-4"
+        style="color: {accentColor}"
+        contenteditable={editable}
+        use:editableAuthor
+        on:keydown={handleKeyDown}
+        data-field="author"
+        data-placeholder="AUTHOR"
+        role="textbox"
+        tabindex="0"
+      ></cite>
+    </div>
+  {/if}
+
+  <!-- Claude terminal theme -->
+  {#if theme.quoteStyle === 'claude-code'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 rounded-md md:rounded-lg card-shadow"
+      style="background-color: {theme.cardBackground || bg}; "
+    >
+      <div class="flex gap-2 mb-8">
+        <div class="w-3.5 h-3.5 rounded-full bg-[#FF5F56]"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-[#FFBD2E]"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-[#27C93F]"></div>
+      </div>
+
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {#if $showQuoteMarks}
+          <svg
+            width="34"
+            height="27"
+            viewBox="0 0 34 27"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-10 h-10 mb-4 md:mb-8 shrink-0"
+          >
+            <path
+              d="M10.1084 0L0 13.4787V26.9574H13.4774V13.4787H6.73806L13.9587 3.85161L10.1084 0ZM33.6594 3.85161L29.809 0L19.7006 13.4787V26.9574H33.1781V13.4787H26.4387L33.6594 3.85161Z"
+              fill={quoteMarkColor}
+            />
+          </svg>
+        {/if}
+
+        <blockquote
+          class="text-xl md:text-2xl font-light leading-snug outline-none min-h-[1.5em] w-full"
+          contenteditable={editable}
+          use:editableQuote
+          on:keydown={handleKeyDown}
+          data-placeholder="Enter your quote..."
+        ></blockquote>
+      </div>
+
+      <div class="flex items-center h-8 w-full mt-8">
+        <span class="mr-3 font-bold text-lg select-none" style="color: {accentColor}">&gt;</span>
+        <cite
+          class="text-base font-medium not-italic uppercase tracking-wider outline-none min-h-[1.5em] mr-4"
+          style="color: {accentColor}"
+          contenteditable={editable}
+          use:editableAuthor
+          on:keydown={handleKeyDown}
+          data-field="author"
+          data-placeholder="AUTHOR"
+          role="textbox"
+          tabindex="0"
+        ></cite>
       </div>
     </div>
   {/if}

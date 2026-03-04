@@ -45,8 +45,8 @@
         <PeerlistLogoMark size={16} />
       {:else}
         <span
-          class="w-4 h-4 rounded-full border border-black/10 dark:border-white/10 shrink-0"
-          style="background: {selectedPreview}; background-size: cover;"
+          class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#A8A8A8] "
+          style="background: {selectedPreview};"
         ></span>
       {/if}
       <CaretDown class="chevron" />
@@ -72,8 +72,8 @@
                     <PeerlistLogoMark size={16} />
                   {:else}
                     <span
-                      class="w-4 h-4 rounded-full border border-black/10 dark:border-white/10 shrink-0"
-                      style="background: {option.preview}; background-size: cover;"
+                      class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#EAEAEA]"
+                      style="background: {option.preview};"
                     ></span>
                   {/if}
                   <span class="option-label">{option.label}</span>
