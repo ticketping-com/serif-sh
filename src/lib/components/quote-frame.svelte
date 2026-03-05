@@ -5,80 +5,69 @@
     padding,
     currentFontCSS,
     showBackground,
-    showQuoteMarks
-  } from '$lib/stores';
-  import { quoteText, authorName } from '$lib/stores/quote';
+    showQuoteMarks,
+    showBrandLogo
+  } from '$lib/stores'
+  import { quoteText, authorName } from '$lib/stores/quote'
+  import type { QuoteStyle } from '$lib/themes'
+  import VercelWordmark from './icons/vercel-wordmark.svelte'
+  import PeerlistWordMark from './icons/peerlist-wordmark.svelte'
+  import QuoteBrutalist from './icons/quote-brutalist.svelte'
+  import QuoteStartup from './icons/quote-startup.svelte'
+  import QuoteEditorial from './icons/quote-editorial.svelte'
+  import QuoteBreeze from './icons/quote-breeze.svelte'
+  import QuoteClaude from './icons/quote-claude.svelte'
 
-  export let frameRef: HTMLDivElement | null = null;
-  export let editable: boolean = true;
+  export let frameRef: HTMLDivElement | null = null
+  export let editable: boolean = true
 
-  $: theme = $selectedTheme;
-  $: bg = theme.background;
-  $: bgImage = theme.backgroundImage || null;
-  $: bgSize = theme.backgroundSize || 'cover';
-  $: textColor = theme.text;
-  $: accentColor = theme.accent;
-  $: quoteMarkColor = theme.quoteMark;
-  $: borderColor = theme.border || 'transparent';
-  $: isGradient = bg.includes('gradient');
-  $: hasBackgroundImage = !!bgImage && $showBackground;
+  $: theme = $selectedTheme
+  $: bg = theme.background
+  $: bgImage = theme.backgroundImage || null
+  $: bgSize = theme.backgroundSize || 'cover'
+  $: textColor = theme.text
+  $: accentColor = theme.accent
+  $: quoteMarkColor = theme.quoteMark
+  $: borderColor = theme.border || 'transparent'
+  $: isGradient = bg.includes('gradient')
+  $: hasBackgroundImage = !!bgImage && $showBackground
 
   $: alignmentClass = {
-    'left': 'text-left items-start',
-    'center': 'text-center items-center',
-    'right': 'text-right items-end',
-  }[$alignment];
+    left: 'text-left items-start',
+    center: 'text-center items-center',
+    right: 'text-right items-end'
+  }[$alignment]
 
   function handleKeyDown(e: KeyboardEvent) {
     // Prevent newlines in author field
     if (e.key === 'Enter' && (e.target as HTMLElement).dataset.field === 'author') {
-      e.preventDefault();
+      e.preventDefault()
     }
   }
 
   // Use actions instead of reactive text inside contenteditable to prevent cursor resets.
   // Svelte's reactive {$store} inside contenteditable re-renders the text node on every
   // keystroke, which destroys the cursor position.
-  function editableQuote(node: HTMLElement) {
+  // Unified action for contenteditable stores
+  function editableStore(node: HTMLElement, store: { subscribe: Function, set: Function }) {
     function onInput() {
-      quoteText.set(node.innerText);
+      store.set(node.innerText)
     }
 
-    const unsub = quoteText.subscribe(val => {
+    const unsub = store.subscribe((val: string) => {
       if (document.activeElement !== node) {
-        node.textContent = val;
+        node.textContent = val
       }
-    });
+    })
 
-    node.addEventListener('input', onInput);
+    node.addEventListener('input', onInput)
 
     return {
       destroy() {
-        unsub();
-        node.removeEventListener('input', onInput);
+        unsub()
+        node.removeEventListener('input', onInput)
       }
-    };
-  }
-
-  function editableAuthor(node: HTMLElement) {
-    function onInput() {
-      authorName.set(node.innerText);
     }
-
-    const unsub = authorName.subscribe(val => {
-      if (document.activeElement !== node) {
-        node.textContent = val;
-      }
-    });
-
-    node.addEventListener('input', onInput);
-
-    return {
-      destroy() {
-        unsub();
-        node.removeEventListener('input', onInput);
-      }
-    };
   }
 </script>
 
@@ -88,11 +77,10 @@
   style="
     padding: {$padding}px;
     {hasBackgroundImage
-      ? `background-color: ${bg}; background-image: ${bgImage}; background-size: ${bgSize}; background-position: center;`
-      : isGradient
-        ? `background: ${$showBackground ? bg : 'transparent'}`
-        : `background-color: ${$showBackground ? bg : 'transparent'}`
-    };
+    ? `background-color: ${bg}; background-image: ${bgImage}; background-size: ${bgSize}; background-position: center;`
+    : isGradient
+      ? `background: ${$showBackground ? bg : 'transparent'}`
+      : `background-color: ${$showBackground ? bg : 'transparent'}`};
     font-family: {$currentFontCSS};
   "
 >
@@ -105,243 +93,252 @@
   </div>
 </div>
 
-{#snippet quoteContent()}
-  <!-- Classic Style -->
-  {#if theme.quoteStyle === 'classic'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      {#if $showQuoteMarks}
-        <svg class="w-16 h-16 select-none opacity-60 mb-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill={quoteMarkColor}>
-          <path d="M4.583 17.321C3.553 16.227 3 15 3 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179m10 0C13.553 16.227 13 15 13 13.011c0-3.5 2.457-6.637 6.03-8.188l.893 1.378c-3.335 1.804-3.987 4.145-4.247 5.621.537-.278 1.24-.375 1.929-.311 1.804.167 3.226 1.648 3.226 3.489a3.5 3.5 0 0 1-3.5 3.5 3.87 3.87 0 0 1-2.748-1.179"/>
-        </svg>
-      {/if}
-      <blockquote
-        class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <div class="mt-6 text-base not-italic font-medium" style="color: {accentColor}">
-        {#if $authorName}<span class="select-none pointer-events-none">— </span>{/if}<cite
-          class="outline-none min-h-[1.5em] inline"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author name"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Goodreads Style -->
-  {#if theme.quoteStyle === 'goodreads'}
-    <div
-      class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto p-8 rounded-sm w-full"
-      style="
-        border-left: 4px solid {borderColor};
-        background-color: rgba(0,0,0,0.02);
-      "
-    >
-      {#if $showQuoteMarks}
-        <span
-          class="text-6xl leading-none font-serif select-none absolute -top-2 -left-1 opacity-40"
-          style="color: {quoteMarkColor}"
-        >"</span>
-      {/if}
-      <blockquote
-        class="text-lg md:text-xl leading-relaxed pl-4 outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <div class="mt-6 flex items-center gap-3 pl-4">
-        <span class="w-8 h-px" style="background-color: {accentColor}"></span>
-        <cite
-          class="text-sm not-italic font-semibold tracking-wide uppercase outline-none min-h-[1.5em]"
-          style="color: {accentColor}"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="AUTHOR"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Minimal Style -->
-  {#if theme.quoteStyle === 'minimal'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      <blockquote
-        class="text-xl md:text-2xl lg:text-3xl leading-snug font-normal outline-none min-h-[1.5em] {$showQuoteMarks ? 'inline-marks' : ''}"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <cite
-        class="mt-8 text-sm not-italic tracking-widest uppercase outline-none min-h-[1.5em]"
-        style="color: {accentColor}"
-        contenteditable={editable}
-        use:editableAuthor
-        on:keydown={handleKeyDown}
-        data-field="author"
-        data-placeholder="AUTHOR"
-      ></cite>
-    </div>
-  {/if}
-
-  <!-- Decorative Style -->
-  {#if theme.quoteStyle === 'decorative'}
-    <div
-      class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto p-6 w-full"
-    >
-      <!-- Top decorative element -->
-      <div class="flex items-center gap-4 mb-6 w-full justify-center">
-        <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-        {#if $showQuoteMarks}
-          <span class="text-4xl font-serif" style="color: {quoteMarkColor}">❝</span>
-        {/if}
-        <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-      </div>
-
-      <blockquote
-        class="text-xl md:text-2xl leading-relaxed italic outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-
-      <div class="mt-6 flex items-center gap-4 w-full justify-center">
-        <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
-        <cite
-          class="text-sm not-italic font-semibold outline-none min-h-[1.5em]"
-          style="color: {accentColor}"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author"
-        ></cite>
-        <span class="h-px flex-1 max-w-12" style="background-color: {borderColor}"></span>
-      </div>
-
-      <!-- Bottom decorative element -->
-      {#if $showQuoteMarks}
-        <div class="flex items-center gap-4 mt-6 w-full justify-center">
-          <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-          <span class="text-4xl font-serif rotate-180" style="color: {quoteMarkColor}">❝</span>
-          <span class="h-px flex-1 max-w-16" style="background-color: {borderColor}"></span>
-        </div>
-      {/if}
-    </div>
-  {/if}
-
-  <!-- Editorial Style -->
-  {#if theme.quoteStyle === 'editorial'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      <div class="relative">
-        {#if $showQuoteMarks}
-          <span
-            class="text-9xl leading-none font-serif select-none absolute -top-8 -left-6 opacity-20"
-            style="color: {quoteMarkColor}"
-          >"</span>
-        {/if}
-        <blockquote
-          class="text-2xl md:text-3xl lg:text-4xl leading-tight font-medium relative z-10 outline-none min-h-[1.5em]"
-          contenteditable={editable}
-          use:editableQuote
-          on:keydown={handleKeyDown}
-          data-placeholder="Enter your quote..."
-        ></blockquote>
-      </div>
-      <div class="mt-8 pt-4" style="border-top: 2px solid {borderColor}">
-        <cite
-          class="text-base not-italic font-bold outline-none min-h-[1.5em]"
-          contenteditable={editable}
-          use:editableAuthor
-          on:keydown={handleKeyDown}
-          data-field="author"
-          data-placeholder="Author"
-        ></cite>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Modern Style -->
-  {#if theme.quoteStyle === 'modern'}
-    <div
-      class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full"
-    >
-      <div class="flex gap-4">
-        {#if $showQuoteMarks}
-          <span
-            class="text-5xl leading-none font-bold shrink-0"
-            style="color: {quoteMarkColor}"
-          >"</span>
-        {/if}
-        <div class="flex flex-col">
-          <blockquote
-            class="text-lg md:text-xl leading-relaxed outline-none min-h-[1.5em]"
-            contenteditable={editable}
-            use:editableQuote
-            on:keydown={handleKeyDown}
-            data-placeholder="Enter your quote..."
-          ></blockquote>
-          <div
-            class="mt-4 text-sm not-italic font-medium flex items-center gap-2"
-            style="color: {accentColor}"
-          >
-            <span class="w-6 h-0.5 rounded-full shrink-0" style="background-color: {quoteMarkColor}"></span>
-            <cite
-              class="outline-none min-h-[1.5em]"
-              contenteditable={editable}
-              use:editableAuthor
-              on:keydown={handleKeyDown}
-              data-field="author"
-              data-placeholder="Author"
-            ></cite>
-          </div>
-        </div>
-      </div>
-    </div>
-  {/if}
-
-  <!-- Elegant Style -->
-  {#if theme.quoteStyle === 'elegant'}
-    <div class="relative flex flex-col {alignmentClass} max-w-2xl mx-auto w-full">
-      {#if $showQuoteMarks}
-        <span
-          class="leading-none font-serif select-none -mb-12"
-          style="color: {quoteMarkColor}; font-size: 10rem;"
-        >&ldquo;</span>
-      {/if}
-      <blockquote
-        class="text-2xl md:text-3xl leading-relaxed outline-none min-h-[1.5em]"
-        contenteditable={editable}
-        use:editableQuote
-        on:keydown={handleKeyDown}
-        data-placeholder="Enter your quote..."
-      ></blockquote>
-      <span
-        class="block w-12 h-px mt-10 mb-6"
-        style="background-color: {borderColor}"
-      ></span>
-      <cite
-        class="text-sm not-italic font-normal tracking-[0.25em] uppercase outline-none min-h-[1.5em] font-sans"
-        style="color: {accentColor}"
-        contenteditable={editable}
-        use:editableAuthor
-        on:keydown={handleKeyDown}
-        data-field="author"
-        data-placeholder="AUTHOR NAME"
-      ></cite>
+{#snippet auraOverlay()}
+  {#if $showBackground}
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="absolute inset-0 bg-white/50"></div>
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_bottom,#A259FF_0%,#A259FF_65%,rgba(255,255,255,0.65)_100%)] opacity-60"
+      ></div>
+      <div
+        class="absolute inset-0 bg-[linear-gradient(to_bottom,#FF8726_0%,rgba(255,255,255,0.65)_100%)] opacity-60"
+      ></div>
+      <div
+        class="absolute inset-0 bg-[radial-gradient(circle_300px_at_50%_-15%,transparent_20%,white_70%,transparent_85%,white_100%)] opacity-50 mix-blend-soft-light"
+      ></div>
     </div>
   {/if}
 {/snippet}
+
+{#snippet editableQuote(extraClass = "")}
+  <blockquote
+    class="{extraClass} outline-none min-h-[1.5em] w-full"
+    contenteditable={editable}
+    use:editableStore={quoteText}
+    on:keydown={handleKeyDown}
+    data-placeholder="Enter your quote..."
+  ></blockquote>
+{/snippet}
+
+{#snippet editableAuthor(extraClass = "", fieldColor = accentColor)}
+  <cite
+    class="{extraClass} outline-none min-h-[1.5em] not-italic"
+    style="color: {fieldColor}"
+    contenteditable={editable}
+    use:editableStore={authorName}
+    on:keydown={handleKeyDown}
+    data-field="author"
+    data-placeholder="AUTHOR"
+    role="textbox"
+    tabindex="0"
+  ></cite>
+{/snippet}
+
+{#snippet quoteIcon(type: QuoteStyle)}
+  {#if $showQuoteMarks}
+    {#if type === 'brutalist'}
+      <QuoteBrutalist color={quoteMarkColor} size={40} class="mb-8" />
+    {:else if type === 'startup'}
+      <QuoteStartup color={quoteMarkColor} size={40} class="mb-8 shrink-0" />
+    {:else if type === 'editorial' || type === 'noir'}
+      <QuoteEditorial color={quoteMarkColor} size={40} class="mb-8 shrink-0" />
+    {:else if type === 'breeze' || type === 'aura' || type === 'glass'}
+      <QuoteBreeze color={quoteMarkColor} size={40} class="mb-4 md:mb-8 shrink-0" />
+    {:else if type === 'claude-code'}
+      <QuoteClaude color={quoteMarkColor} size={40} class="mb-4 md:mb-8 shrink-0" />
+    {/if}
+  {/if}
+{/snippet}
+
+{#snippet quoteContent()}
+  <!-- Brutalist themes -->
+  {#if theme.quoteStyle === 'brutalist'}
+    <div
+      class="relative z-10 flex w-full max-w-3xl mx-auto shadow-2xl p-4 md:p-8"
+      style="background-color: {theme.cardBackground || bg};"
+    >
+      <div class="relative flex flex-col w-full" style="border: 1px solid {borderColor};">
+        <div class="absolute w-4 h-4 -top-2 -left-2 pointer-events-none">
+          <div
+            class="absolute top-1/2 left-0 w-full h-[0.5px] -translate-y-1/2"
+            style="background-color: {accentColor};"
+          ></div>
+          <div
+            class="absolute left-1/2 top-0 h-full w-[0.5px] -translate-x-1/2"
+            style="background-color: {accentColor};"
+          ></div>
+        </div>
+
+        <div class="absolute w-4 h-4 -bottom-2 -right-2 pointer-events-none">
+          <div
+            class="absolute top-1/2 left-0 w-full h-[0.5px] -translate-y-1/2"
+            style="background-color: {accentColor};"
+          ></div>
+          <div
+            class="absolute left-1/2 top-0 h-full w-[0.5px] -translate-x-1/2"
+            style="background-color: {accentColor};"
+          ></div>
+        </div>
+
+        <div
+          class="relative z-10 flex flex-col pt-2 px-2 pb-2 md:pt-10 md:px-10 md:pb-8 min-h-50 {alignmentClass}"
+        >
+          {@render quoteIcon('brutalist')}
+          {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+        </div>
+
+        <div
+          class="relative z-10 flex items-center px-10 min-h-14 py-4 mt-auto"
+          style="border-top: 1px solid {borderColor};"
+        >
+          {@render editableAuthor("text-sm font-semibold uppercase tracking-widest")}
+
+          {#if $showBrandLogo}
+            <span class="mx-3 text-lg opacity-40 font-light" style="color: {accentColor}">|</span>
+            <VercelWordmark color={textColor} size={60} />
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Startup themes -->
+  {#if theme.quoteStyle === 'startup'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {@render quoteIcon('startup')}
+      {@render editableQuote("text-xl md:text-2xl font-normal leading-relaxed")}
+
+      <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
+
+      <div class="flex items-center h-8 w-full">
+        {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+
+        {#if $showBrandLogo}
+          <span class="mr-4 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
+          <PeerlistWordMark color={textColor} size={60} />
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Editorial theme -->
+  {#if theme.quoteStyle === 'editorial'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {@render quoteIcon('editorial')}
+      {@render editableQuote("text-xl md:text-2xl font-normal italic leading-relaxed")}
+
+      <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
+
+      {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+    </div>
+  {/if}
+
+  <!-- Breeze theme -->
+  {#if theme.quoteStyle === 'breeze'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      style="background-color: {theme.cardBackground || bg};"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {@render quoteIcon('breeze')}
+        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+    </div>
+  {/if}
+
+  <!-- Aura theme -->
+  {#if theme.quoteStyle === 'aura'}
+    {@render auraOverlay()}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      style="background-color: {theme.cardBackground || bg};"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {@render quoteIcon('aura')}
+        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      {@render editableAuthor("text-sm font-semibold uppercase tracking-widest")}
+    </div>
+  {/if}
+
+  <!-- Noir theme -->
+  {#if theme.quoteStyle === 'noir'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {@render quoteIcon('noir')}
+      {@render editableQuote("text-xl md:text-2xl font-normal leading-relaxed")}
+
+      <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
+
+      {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+    </div>
+  {/if}
+
+  <!-- Glass theme -->
+  {#if theme.quoteStyle === 'glass'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl glassmorphism"
+    >
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {@render quoteIcon('glass')}
+        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+      </div>
+
+      <div
+        class="w-full h-px mt-5 md:mt-10 mb-3 md:mb-6"
+        style="background-color: {borderColor};"
+      ></div>
+
+      {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+    </div>
+  {/if}
+
+  <!-- Claude terminal theme -->
+  {#if theme.quoteStyle === 'claude-code'}
+    <div
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 rounded-md md:rounded-lg card-shadow"
+      style="background-color: {theme.cardBackground || bg}; "
+    >
+      <div class="flex gap-2 mb-8" aria-hidden="true">
+        <div class="w-3.5 h-3.5 rounded-full bg-[#FF5F56]"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-[#FFBD2E]"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-[#27C93F]"></div>
+      </div>
+
+      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+        {@render quoteIcon('claude-code')}
+        {@render editableQuote("text-xl md:text-2xl font-light leading-snug")}
+      </div>
+
+      <div class="flex items-center h-8 w-full mt-8">
+        <span class="mr-3 font-bold text-lg select-none" style="color: {accentColor}">&gt;</span>
+        {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+      </div>
+    </div>
+  {/if}
+{/snippet}
+
 
 <style>
   .quote-frame {

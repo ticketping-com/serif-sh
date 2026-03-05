@@ -53,11 +53,11 @@ function createHashStore<T>(
 // Theme
 export const selectedThemeId = createHashStore<string>(
   'theme',
-  'paper',
+  'editorial',
   (val) => val,
   (str) => str
 );
-export const selectedTheme = derived(selectedThemeId, ($id) => THEMES[$id] || THEMES.paper);
+export const selectedTheme = derived(selectedThemeId, ($id) => THEMES[$id] || THEMES['editorial']);
 
 // Alignment
 export const alignment = createHashStore<Alignment>(
@@ -119,3 +119,5 @@ export function copyShareableUrl(): string {
   }
   return '';
 }
+
+export const showBrandLogo = writable<boolean>(true);

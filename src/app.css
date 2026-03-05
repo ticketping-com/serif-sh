@@ -42,10 +42,12 @@
   /* Font families */
   --font-open-runde: "Open Runde", system-ui, sans-serif;
   /* Quote styling fonts */
+  --font-geist: "Geist", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-jetbrains-mono: "JetBrains Mono", monospace;
   --font-playfair: "Playfair Display", serif;
   --font-crimson: "Crimson Pro", serif;
-  --font-source-serif: "Source Serif 4", serif;
-  --font-libre: "Libre Baskerville", serif;
 
   /* Parchment colors */
   --color-parchment-50: #fdfcf9;
@@ -198,6 +200,14 @@ body {
   @apply fixed bottom-4 right-4 px-4 py-3 rounded-lg shadow-lg;
   @apply bg-ink-900 text-parchment-50;
   @apply animate-slide-up;
+}
+
+.card-shadow{
+  @apply shadow-[0px_0px_0px_1px_#0000000f,0px_1px_2px_-1px_#0000000f,0px_2px_4px_0px_#0000000a];
+}
+
+.glassmorphism{
+  @apply bg-white/10 border border-white/20 backdrop-filter backdrop-blur-sm shadow-[1px_1px_2px_inset_rgba(80,80,80,0.2),-1px_-1px_2px_inset_rgba(80,80,80,0.2),-4px_4px_8px_2px_inset_rgba(3,7,18,0.1),4px_-4px_8px_2px_inset_rgba(3,7,18,0.1)]
 }
 
 /* === Shared Select Component Styles === */

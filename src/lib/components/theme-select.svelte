@@ -4,11 +4,14 @@
   import CaretDoubleUp from 'phosphor-svelte/lib/CaretDoubleUp'
   import CaretDown from 'phosphor-svelte/lib/CaretDown'
   import Check from 'phosphor-svelte/lib/Check'
+  import VercelLogoMark from './icons/vercel-logo-mark.svelte'
+  import PeerlistLogoMark from './icons/peerlist-logo-mark.svelte'
 
   type ThemeOption = {
     value: string
     label: string
     preview: string
+    brand?: string
     disabled?: boolean
   }
 
@@ -19,15 +22,9 @@
     handleValueChange?: (value: string) => void
   }
 
-  let {
-    value = $bindable(),
-    label = '',
-    options,
-    handleValueChange,
-  }: Props = $props()
+  let { value = $bindable(), label = '', options, handleValueChange }: Props = $props()
 
   const selectedOption = $derived(options.find((item) => item.value === value))
-  const selectedPreview = $derived(selectedOption?.preview || '')
 
   function onValueChange(val: string | string[]) {
     if (typeof val === 'string' && handleValueChange) {
@@ -36,16 +33,28 @@
   }
 </script>
 
+{#snippet themeIcon(option: ThemeOption)}
+  {#if option.brand === 'vercel' || option.value === 'vercel'}
+    <VercelLogoMark size={16} />
+  {:else if option.brand === 'peerlist' || option.value === 'peerlist'}
+    <PeerlistLogoMark size={16} />
+  {:else}
+    <span
+      class="flex items-center justify-center w-4 h-4 rounded-[50%] border border-[#A8A8A8]"
+      style="background: {option.preview};"
+    ></span>
+  {/if}
+{/snippet}
+
 <div class="flex flex-col gap-1.5">
   {#if label}
     <span class="text-[10px] font-medium uppercase tracking-wide opacity-50">{label}</span>
   {/if}
-  <Select.Root type="single" bind:value={value as never} onValueChange={onValueChange}>
+  <Select.Root type="single" bind:value={value as never} {onValueChange}>
     <Select.Trigger class="select-trigger" aria-label="Select theme">
-      <span
-        class="w-4 h-4 rounded-full border border-black/10 dark:border-white/10 shrink-0"
-        style="background: {selectedPreview}; background-size: cover;"
-      ></span>
+      {#if selectedOption}
+        {@render themeIcon(selectedOption)}
+      {/if}
       <CaretDown class="chevron" />
     </Select.Trigger>
     <Select.Portal>
@@ -63,10 +72,7 @@
             >
               {#snippet children({ selected })}
                 <div class="option-content">
-                  <span
-                    class="w-4 h-4 rounded-full border border-black/10 dark:border-white/10 shrink-0"
-                    style="background: {option.preview}; background-size: cover;"
-                  ></span>
+                  {@render themeIcon(option)}
                   <span class="option-label">{option.label}</span>
                   {#if selected}
                     <Check class="check-icon" />
@@ -83,4 +89,3 @@
     </Select.Portal>
   </Select.Root>
 </div>
-
