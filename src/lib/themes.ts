@@ -1,6 +1,6 @@
 export type QuoteStyle = 'brutalist' | "startup" | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
-export type FontFamily = 'playfair' | 'crimson' | 'sans' | 'roboto'| 'inter'|'mono';
+export type FontFamily = 'playfair' | 'crimson' | 'geist' | 'inter'|'mono'|'instrument-serif';
 export type Brand = 'vercel' | 'peerlist';
 
 export interface Theme {
@@ -15,20 +15,18 @@ export interface Theme {
   border?: string;
   shadow?: boolean;
   font: FontFamily;
+  authorFont?: FontFamily;
   brand?: Brand;
+  defaultAlignment?: Alignment;
   // Background image support
   backgroundImage?: string;
   backgroundSize?: string;
 }
 
 export const FONTS: Record<FontFamily, { name: string; css: string }> = {
-  'sans': {
-    name: 'Geist Sans',
+  'geist': {
+    name: 'Geist',
     css: '"Geist", sans-serif',
-  },
-  'roboto': {
-    name: 'Roboto',
-    css: '"Roboto", sans-serif',
   },
   'inter': {
     name: 'Inter',
@@ -45,6 +43,10 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
   'mono': {
     name: 'JetBrains Mono',
     css: '"JetBrains Mono", monospace',
+  },
+  'instrument-serif': {
+    name: 'Instrument Serif',
+    css: '"Instrument Serif", serif',
   }
 };
 
@@ -61,8 +63,10 @@ export const THEMES: Record<string, Theme> = {
     accent: '#A0A0A0',
     quoteMark: '#0070F3',
     border: '#FFFFFF20',
-    font: 'sans',
+    font: 'geist',
+    authorFont: "geist",
     brand: 'vercel',
+    defaultAlignment: 'left',
   },
   "vercel-light": {
     id: 'vercel-light',
@@ -76,8 +80,10 @@ export const THEMES: Record<string, Theme> = {
     accent: '#666666',
     quoteMark: '#0070F3',
     border: '#0000001A',
-    font: 'sans',
+    font: 'geist',
+    authorFont: "geist",
     brand: 'vercel',
+    defaultAlignment: 'left',
   },
   "peerlist-dark": {
     id: 'peerlist-dark',
@@ -88,8 +94,10 @@ export const THEMES: Record<string, Theme> = {
     accent: "#A0A0A0",
     quoteMark: "#00AA45",
     border: "#FFFFFF20",
-    font: "roboto",
+    font: "instrument-serif",
+    authorFont: "geist",
     brand: 'peerlist',
+    defaultAlignment: 'left',
   },
   "peerlist-light": {
     id: 'peerlist-light',
@@ -100,8 +108,10 @@ export const THEMES: Record<string, Theme> = {
     accent: "#666666",
     quoteMark: "#00AA45",
     border: "#0000001A",
-    font: "roboto",
+    font: "instrument-serif",
+    authorFont: "geist",
     brand: 'peerlist',
+    defaultAlignment: 'left',
   },
   "editorial": {
     id: 'editorial',
@@ -174,6 +184,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#DE7356',
     border: '#FFFFFF',
     font: 'mono',
+    defaultAlignment: 'left',
   }
 };
 

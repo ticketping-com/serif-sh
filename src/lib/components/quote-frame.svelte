@@ -4,6 +4,7 @@
     alignment,
     padding,
     currentFontCSS,
+    authorFontCSS,
     showBackground,
     showQuoteMarks,
     showBrandLogo
@@ -49,8 +50,22 @@
   // Svelte's reactive {$store} inside contenteditable re-renders the text node on every
   // keystroke, which destroys the cursor position.
   // Unified action for contenteditable stores
-  function editableStore(node: HTMLElement, store: { subscribe: Function, set: Function }) {
+  function editableStore(node: HTMLElement, store: { subscribe: Function; set: Function }) {
     function onInput() {
+      store.set(node.innerText)
+    }
+
+    function onPaste(e: ClipboardEvent) {
+      e.preventDefault()
+      const text = e.clipboardData?.getData('text/plain') ?? ''
+      const selection = window.getSelection()
+      if (!selection?.rangeCount) return
+      const range = selection.getRangeAt(0)
+      range.deleteContents()
+      range.insertNode(document.createTextNode(text))
+      range.collapse(false)
+      selection.removeAllRanges()
+      selection.addRange(range)
       store.set(node.innerText)
     }
 
@@ -61,11 +76,13 @@
     })
 
     node.addEventListener('input', onInput)
+    node.addEventListener('paste', onPaste)
 
     return {
       destroy() {
         unsub()
         node.removeEventListener('input', onInput)
+        node.removeEventListener('paste', onPaste)
       }
     }
   }
@@ -110,7 +127,7 @@
   {/if}
 {/snippet}
 
-{#snippet editableQuote(extraClass = "")}
+{#snippet editableQuote(extraClass = '')}
   <blockquote
     class="{extraClass} outline-none min-h-[1.5em] w-full"
     contenteditable={editable}
@@ -120,10 +137,10 @@
   ></blockquote>
 {/snippet}
 
-{#snippet editableAuthor(extraClass = "", fieldColor = accentColor)}
+{#snippet editableAuthor(extraClass = '', fieldColor = accentColor)}
   <cite
-    class="{extraClass} outline-none min-h-[1.5em] not-italic"
-    style="color: {fieldColor}"
+    class="{extraClass} outline-none min-h-[1.5em] not-italic whitespace-nowrap"
+    style="color: {fieldColor};{$authorFontCSS ? ` font-family: ${$authorFontCSS}` : ''}"
     contenteditable={editable}
     use:editableStore={authorName}
     on:keydown={handleKeyDown}
@@ -184,14 +201,14 @@
           class="relative z-10 flex flex-col pt-2 px-2 pb-2 md:pt-10 md:px-10 md:pb-8 min-h-50 {alignmentClass}"
         >
           {@render quoteIcon('brutalist')}
-          {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+          {@render editableQuote('text-xl md:text-2xl font-medium leading-snug')}
         </div>
 
         <div
           class="relative z-10 flex items-center px-10 min-h-14 py-4 mt-auto"
           style="border-top: 1px solid {borderColor};"
         >
-          {@render editableAuthor("text-sm font-semibold uppercase tracking-widest")}
+          {@render editableAuthor('text-sm font-semibold uppercase tracking-widest')}
 
           {#if $showBrandLogo}
             <span class="mx-3 text-lg opacity-40 font-light" style="color: {accentColor}">|</span>
@@ -209,12 +226,12 @@
       style="background-color: {theme.background};"
     >
       {@render quoteIcon('startup')}
-      {@render editableQuote("text-xl md:text-2xl font-normal leading-relaxed")}
+      {@render editableQuote('text-xl md:text-3xl font-normal leading-relaxed')}
 
       <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
 
       <div class="flex items-center h-8 w-full">
-        {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+        {@render editableAuthor('text-sm font-medium uppercase tracking-wider mr-4')}
 
         {#if $showBrandLogo}
           <span class="mr-4 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
@@ -231,11 +248,11 @@
       style="background-color: {theme.background};"
     >
       {@render quoteIcon('editorial')}
-      {@render editableQuote("text-xl md:text-2xl font-normal italic leading-relaxed")}
+      {@render editableQuote('text-xl md:text-2xl font-normal italic leading-relaxed')}
 
       <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
 
-      {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+      {@render editableAuthor('text-sm font-medium uppercase tracking-wider mr-4')}
     </div>
   {/if}
 
@@ -247,7 +264,7 @@
     >
       <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
         {@render quoteIcon('breeze')}
-        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+        {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
 
       <div
@@ -255,7 +272,7 @@
         style="background-color: {borderColor};"
       ></div>
 
-      {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+      {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
     </div>
   {/if}
 
@@ -268,7 +285,7 @@
     >
       <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
         {@render quoteIcon('aura')}
-        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+        {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
 
       <div
@@ -276,7 +293,7 @@
         style="background-color: {borderColor};"
       ></div>
 
-      {@render editableAuthor("text-sm font-semibold uppercase tracking-widest")}
+      {@render editableAuthor('text-sm font-semibold uppercase tracking-widest')}
     </div>
   {/if}
 
@@ -287,11 +304,11 @@
       style="background-color: {theme.background};"
     >
       {@render quoteIcon('noir')}
-      {@render editableQuote("text-xl md:text-2xl font-normal leading-relaxed")}
+      {@render editableQuote('text-xl md:text-2xl font-normal leading-relaxed')}
 
       <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
 
-      {@render editableAuthor("text-sm font-medium uppercase tracking-wider mr-4")}
+      {@render editableAuthor('text-sm font-medium uppercase tracking-wider mr-4')}
     </div>
   {/if}
 
@@ -302,7 +319,7 @@
     >
       <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
         {@render quoteIcon('glass')}
-        {@render editableQuote("text-xl md:text-2xl lg:text-3xl font-medium leading-snug")}
+        {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
 
       <div
@@ -310,7 +327,7 @@
         style="background-color: {borderColor};"
       ></div>
 
-      {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+      {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
     </div>
   {/if}
 
@@ -328,17 +345,16 @@
 
       <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
         {@render quoteIcon('claude-code')}
-        {@render editableQuote("text-xl md:text-2xl font-light leading-snug")}
+        {@render editableQuote('text-xl md:text-2xl font-light leading-snug')}
       </div>
 
       <div class="flex items-center h-8 w-full mt-8">
         <span class="mr-3 font-bold text-lg select-none" style="color: {accentColor}">&gt;</span>
-        {@render editableAuthor("text-base font-medium uppercase tracking-wider mr-4")}
+        {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
       </div>
     </div>
   {/if}
 {/snippet}
-
 
 <style>
   .quote-frame {

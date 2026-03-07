@@ -67,6 +67,18 @@ export const alignment = createHashStore<Alignment>(
   (str) => str as Alignment
 );
 
+// Apply theme's default alignment when theme changes
+if (browser) {
+  let initialized = false;
+  selectedTheme.subscribe(($theme) => {
+    if (!initialized) {
+      initialized = true;
+      return;
+    }
+    alignment.set($theme.defaultAlignment || 'center');
+  });
+}
+
 // Padding
 export const padding = createHashStore<number>(
   'padding',
@@ -87,6 +99,10 @@ export const currentFont = derived(
   ([$fontId, $theme]) => ($fontId || $theme.font) as FontFamily
 );
 export const currentFontCSS = derived(currentFont, ($font) => FONTS[$font].css);
+export const authorFontCSS = derived(
+  selectedTheme,
+  ($theme) => $theme.authorFont ? FONTS[$theme.authorFont].css : null
+);
 
 // Show background
 export const showBackground = createHashStore<boolean>(

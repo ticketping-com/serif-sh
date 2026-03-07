@@ -43,11 +43,11 @@
   --font-open-runde: "Open Runde", system-ui, sans-serif;
   /* Quote styling fonts */
   --font-geist: "Geist", sans-serif;
-  --font-roboto: "Roboto", sans-serif;
   --font-inter: "Inter", sans-serif;
   --font-jetbrains-mono: "JetBrains Mono", monospace;
   --font-playfair: "Playfair Display", serif;
   --font-crimson: "Crimson Pro", serif;
+  --font-instrument-serif: "Instrument Serif", serif;
 
   /* Parchment colors */
   --color-parchment-50: #fdfcf9;
