@@ -1,6 +1,6 @@
 export type QuoteStyle = 'brutalist' | "startup" | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
-export type FontFamily = 'playfair' | 'crimson' | 'geist' | 'inter'|'mono'|'instrument-serif';
+export type FontFamily = 'playfair' | 'old-standard' | 'geist' | 'inter'|'mono'|'instrument-serif';
 export type Brand = 'vercel' | 'peerlist';
 
 export interface Theme {
@@ -36,9 +36,9 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
     name: 'Playfair Display',
     css: '"Playfair Display", serif',
   },
-  'crimson': {
-    name: 'Crimson Pro',
-    css: '"Crimson Pro", serif',
+  'old-standard': {
+    name: 'Old Standard TT',
+    css: '"Old Standard TT", serif',
   },
   'mono': {
     name: 'JetBrains Mono',
@@ -123,6 +123,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#000000',
     border: '#E5E7EB',
     font: 'playfair',
+    authorFont: 'inter',
   },
   "breeze": {
     id: 'breeze',
@@ -135,7 +136,9 @@ export const THEMES: Record<string, Theme> = {
     accent: '#666666',
     quoteMark: '#AEC6FF',
     border: '#AEC6FF',
-    font: 'crimson',
+    font: 'old-standard',
+    authorFont: 'inter',
+    defaultAlignment: 'left',
   },
   "aura": {
     id: 'aura',
@@ -149,6 +152,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#FF943E99',
     border: '#FF943E99',
     font: 'inter',
+    authorFont: 'inter',
   },
    "noir": {
     id: 'noir',
@@ -160,6 +164,7 @@ export const THEMES: Record<string, Theme> = {
     quoteMark: '#FFCC00',
     border: '#FFCC00',
     font: 'playfair',
+    authorFont: 'inter',
   },
   "glass": {
     id: 'glass',
@@ -171,7 +176,8 @@ export const THEMES: Record<string, Theme> = {
     accent: '##EDEDED',
     quoteMark: '#FFFFFF',
     border: '#EAEAEA',
-    font: 'crimson',
+    font: 'old-standard',
+    authorFont: 'inter',
   },
   "claude-code": {
     id: 'claude-code',

@@ -39,6 +39,12 @@
     right: 'text-right items-end'
   }[$alignment]
 
+  $: justifyClass = {
+    left: 'justify-start',
+    center: 'justify-center',
+    right: 'justify-end'
+  }[$alignment]
+
   function handleKeyDown(e: KeyboardEvent) {
     // Prevent newlines in author field
     if (e.key === 'Enter' && (e.target as HTMLElement).dataset.field === 'author') {
@@ -205,7 +211,7 @@
         </div>
 
         <div
-          class="relative z-10 flex items-center px-10 min-h-14 py-4 mt-auto"
+          class="relative z-10 flex items-center {justifyClass} px-10 min-h-14 py-4 mt-auto"
           style="border-top: 1px solid {borderColor};"
         >
           {@render editableAuthor('text-sm font-semibold uppercase tracking-widest')}
@@ -230,7 +236,7 @@
 
       <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
 
-      <div class="flex items-center h-8 w-full">
+      <div class="flex items-center {justifyClass} h-8 w-full">
         {@render editableAuthor('text-sm font-medium uppercase tracking-wider mr-4')}
 
         {#if $showBrandLogo}
@@ -259,10 +265,10 @@
   <!-- Breeze theme -->
   {#if theme.quoteStyle === 'breeze'}
     <div
-      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow {alignmentClass}"
       style="background-color: {theme.cardBackground || bg};"
     >
-      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+      <div class="relative z-10 flex flex-col min-h-50">
         {@render quoteIcon('breeze')}
         {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
@@ -280,10 +286,10 @@
   {#if theme.quoteStyle === 'aura'}
     {@render auraOverlay()}
     <div
-      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow"
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow {alignmentClass}"
       style="background-color: {theme.cardBackground || bg};"
     >
-      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+      <div class="relative z-10 flex flex-col min-h-50">
         {@render quoteIcon('aura')}
         {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
@@ -315,9 +321,9 @@
   <!-- Glass theme -->
   {#if theme.quoteStyle === 'glass'}
     <div
-      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl glassmorphism"
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl glassmorphism {alignmentClass}"
     >
-      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+      <div class="relative z-10 flex flex-col min-h-50">
         {@render quoteIcon('glass')}
         {@render editableQuote('text-xl md:text-2xl lg:text-3xl font-medium leading-snug')}
       </div>
