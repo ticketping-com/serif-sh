@@ -9,8 +9,11 @@
   import ExportButton from '$lib/components/export-button.svelte'
   import Toast from '$lib/components/toast.svelte'
   import ResizableFrame from '$lib/components/resizable-frame.svelte'
+  import AboutModal from '$lib/components/about-modal.svelte'
   import SerifshLogo from '$lib/components/icons/serifsh-logo.svelte'
   import { showQuoteMarks, selectedThemeId, showBrandLogo } from '$lib/stores'
+
+  let aboutOpen = false
 
   let frameRef: HTMLDivElement | null = null
   let toast: { message: string; type?: 'success' | 'error' } | null = null
@@ -57,23 +60,26 @@
   <!-- Header -->
   <header class="">
     <div class="mx-auto py-3 px-4 flex items-center justify-between">
-      <div class="flex flex-row gap-3">
+      <div class="flex flex-row gap-3 items-center">
         <h1 class="sr-only">serif.sh</h1>
         <div class="flex items-center h-6 [&>svg]:h-full [&>svg]:w-auto">
           <SerifshLogo />
         </div>
-        <!-- <div class="text-sm opacity-50 pt-2">by</div>
-        <a href="https://ticketping.com" class="flex flex-row items-center gap-1.5 no-underline text-inherit" aria-label="Ticketping" target="_blank">
-          <div class="border border-black/10 dark:border-white/10 rounded-full flex items-center justify-center [&>svg]:w-7 [&>svg]:h-7">
-            <TicketpingLogoMark ariaLabel="Ticketping logo" />
-          </div>
-          <div class="pb-px [&>svg]:h-5 [&>svg]:w-auto pt-1.5">
-            <TicketpingWordmark />
-            <span class="sr-only">Ticketping</span>
-          </div>
-        </a> -->
       </div>
-      <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
+      <div class="flex items-center gap-2">
+        <button
+          class="flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-800 transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-parchment-200"
+          on:click={() => (aboutOpen = true)}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4"/>
+            <path d="M12 8h.01"/>
+          </svg>
+          About
+        </button>
+        <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
+      </div>
     </div>
   </header>
 
@@ -114,3 +120,5 @@
 {#if toast}
   <Toast message={toast.message} type={toast.type || 'info'} onClose={clearToast} />
 {/if}
+
+<AboutModal bind:open={aboutOpen} />
