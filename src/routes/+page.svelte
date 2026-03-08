@@ -10,8 +10,11 @@
   import Toast from '$lib/components/toast.svelte'
   import ResizableFrame from '$lib/components/resizable-frame.svelte'
   import AboutModal from '$lib/components/about-modal.svelte'
-  import SerifshLogo from '$lib/components/icons/serifsh-logo.svelte'
+  import SerifshLogoMark from '$lib/components/icons/serifsh-logo-mark.svelte'
+  import SerifshWordmark from '$lib/components/icons/serifsh-wordmark.svelte'
   import { showQuoteMarks, selectedThemeId, showBrandLogo } from '$lib/stores'
+  import TicketpingLogoMark from '$lib/components/icons/ticketping-logo-mark.svelte'
+  import TicketpingWordmark from '$lib/components/icons/ticketping-wordmark.svelte'
 
   let aboutOpen = false
 
@@ -58,23 +61,51 @@
 
 <div class="grid w-full min-h-screen grid-rows-[auto_1fr_auto]">
   <!-- Header -->
-  <header class="">
-    <div class="mx-auto py-3 px-4 flex items-center justify-between">
+  <header class="bg-parchment-50/10 border-b border-b-white/10 backdrop-filter backdrop-blur-sm shadow-sm h-[50px] px-4 py-2 z-20 w-full sticky top-0">
+    <div class="mx-auto flex items-center justify-between">
       <div class="flex flex-row gap-3 items-center">
         <h1 class="sr-only">serif.sh</h1>
-        <div class="flex items-center h-6 [&>svg]:h-full [&>svg]:w-auto">
-          <SerifshLogo />
+        <div
+          class="inline-flex shrink-0 items-center justify-center whitespace-nowrap h-[30px] gap-2 px-3 pl-1 pr-2 py-1"
+        >
+          <SerifshLogoMark class="h-6 w-6" />
+          <SerifshWordmark class="h-4 w-auto -translate-y-[2px]" />
+        </div>
+        <div class="-ml-2 flex items-center relative z-10 gap-[4px]">
+          <span class="text-sm opacity-50">by </span>
+          <a
+            href="https://ticketping.com"
+            class="inline-flex shrink-0 items-center justify-center whitespace-nowrap overflow-hidden h-[30px] gap-1.5 no-underline text-inherit px-3 pl-[8px]"
+            aria-label="Ticketping"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <div class="border border-black/10 rounded-full flex items-center justify-center">
+              <TicketpingLogoMark class="w-5 h-5" />
+            </div>
+            <TicketpingWordmark class="h-4 w-auto mt-px pt-px" />
+          </a>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <button
-          class="flex items-center gap-1.5 text-sm text-ink-500 hover:text-ink-800 transition-colors cursor-pointer px-2 py-1 rounded-lg hover:bg-parchment-200"
+          class="flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800 transition-all duration-150 cursor-pointer px-3 h-[30px] rounded-lg hover:bg-parchment-200 hover:shadow-custom"
           on:click={() => (aboutOpen = true)}
         >
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M12 16v-4"/>
-            <path d="M12 8h.01"/>
+          <svg
+            aria-hidden="true"
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 16v-4" />
+            <path d="M12 8h.01" />
           </svg>
           About
         </button>

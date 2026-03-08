@@ -100,21 +100,31 @@ body {
 }
 
 /* Custom scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.parchment.400') transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 4px;
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-parchment-100;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-parchment-400 rounded-full;
+  @apply bg-parchment-300 rounded-full;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-parchment-500;
+  @apply bg-parchment-400;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Selection */
@@ -204,6 +214,10 @@ body {
 
 .card-shadow{
   @apply shadow-[0px_0px_0px_1px_#0000000f,0px_1px_2px_-1px_#0000000f,0px_2px_4px_0px_#0000000a];
+}
+
+.shadow-custom{
+  @apply shadow-[0px_0px_0px_1px_#e8dcc7,0px_1px_2px_-1px_#0000001a,0px_2px_4px_0px_#00000014];
 }
 
 .glassmorphism{
