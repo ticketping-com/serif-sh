@@ -1,9 +1,5 @@
 <script lang="ts">
   import { Select } from 'bits-ui'
-  import CaretDoubleDown from 'phosphor-svelte/lib/CaretDoubleDown'
-  import CaretDoubleUp from 'phosphor-svelte/lib/CaretDoubleUp'
-  import CaretDown from 'phosphor-svelte/lib/CaretDown'
-  import Check from 'phosphor-svelte/lib/Check'
 
   type FontOption = {
     value: string
@@ -19,12 +15,9 @@
     handleValueChange?: (value: string) => void
   }
 
-  let {
-    value = $bindable(),
-    label = '',
-    options,
-    handleValueChange,
-  }: Props = $props()
+  let { value, label = '', options, handleValueChange }: Props = $props()
+
+  let open = $state(false)
 
   const selectedOption = $derived(options.find((item) => item.value === value))
   const selectedFontFamily = $derived(selectedOption?.fontFamily || '')
@@ -40,40 +33,53 @@
   {#if label}
     <span class="text-[10px] font-medium uppercase tracking-wide opacity-50">{label}</span>
   {/if}
-  <Select.Root type="single" bind:value={value as never} onValueChange={onValueChange}>
-    <Select.Trigger class="select-trigger" aria-label="Select font">
-      <span class="text-base font-medium w-6 text-center" style="font-family: {selectedFontFamily}">Aa</span>
-      <CaretDown class="chevron" />
+  <Select.Root type="single" value={value as never} {onValueChange} bind:open>
+    <Select.Trigger
+      class="select-trigger border-shadow hover:border-shadow-hover transition-shadow duration-150"
+      aria-label="Select font"
+    >
+      <span class="text-base font-medium w-6 text-center" style="font-family: {selectedFontFamily}"
+        >Aa</span
+      >
+      <svg
+        class="chevron transition-transform duration-150 {open ? 'rotate-180' : ''}"
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M4 10L8 6L12 10"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
     </Select.Trigger>
     <Select.Portal>
-      <Select.Content class="select-dropdown" sideOffset={4} side="top">
-        <Select.ScrollUpButton class="scroll-button">
-          <CaretDoubleUp class="scroll-icon" />
-        </Select.ScrollUpButton>
+      <Select.Content
+        class="select-dropdown select-dropdown--start"
+        sideOffset={4}
+        side="top"
+        align="start"
+      >
         <Select.Viewport class="options-viewport">
           {#each options as option (option.value)}
             <Select.Item
-              class="select-option"
+              class="select-option {option.value === value ? 'select-option-active' : ''}"
               value={option.value}
               label={option.label}
               disabled={option.disabled ?? false}
             >
-              {#snippet children({ selected })}
-                <div class="option-content">
-                  <span class="option-label">{option.label}</span>
-                  {#if selected}
-                    <Check class="check-icon" />
-                  {/if}
-                </div>
-              {/snippet}
+              <div class="option-content">
+                <span class="option-label">{option.label}</span>
+              </div>
             </Select.Item>
           {/each}
         </Select.Viewport>
-        <Select.ScrollDownButton class="scroll-button">
-          <CaretDoubleDown class="scroll-icon" />
-        </Select.ScrollDownButton>
       </Select.Content>
     </Select.Portal>
   </Select.Root>
 </div>
-

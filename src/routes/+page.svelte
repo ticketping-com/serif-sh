@@ -1,5 +1,23 @@
 <script lang="ts">
   import { get } from 'svelte/store'
+  import { quintOut, quintIn } from 'svelte/easing'
+
+  function slideX(node: Element, {
+    duration = 250,
+    easing: easingFn = quintOut
+  }: { duration?: number; easing?: (t: number) => number } = {}) {
+    const width = node.getBoundingClientRect().width
+    return {
+      duration,
+      easing: easingFn,
+      css: (t: number) => `
+        max-width: ${t * width}px;
+        opacity: ${t};
+        overflow: hidden;
+        filter: blur(${(1 - t) * 6}px);
+      `
+    }
+  }
   import QuoteFrame from '$lib/components/quote-frame.svelte'
   import ThemeSelector from '$lib/components/theme-selector.svelte'
   import AlignmentControl from '$lib/components/alignment-control.svelte'
@@ -128,9 +146,9 @@
   </main>
 
   <!-- Bottom Controls Bar -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pb-4 pointer-events-none">
+  <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pb-2 sm:px-4 sm:pb-4 pointer-events-none">
     <div
-      class="flex items-center gap-4 md:gap-6 py-3 md:py-4 px-4 md:px-6 bg-white/95 border border-black/10 rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.15)] backdrop-blur-xl pointer-events-auto overflow-visible max-w-full"
+      class="flex items-center gap-2 sm:gap-4 md:gap-6 py-3 md:py-4 px-3 sm:px-4 md:px-6 bg-white rounded-2xl border-shadow hover:border-shadow-hover transition-shadow duration-150 pointer-events-auto overflow-x-auto md:overflow-visible scrollbar-none max-w-full"
     >
       <ThemeSelector />
       <FontSelector />
@@ -139,10 +157,15 @@
       <ToggleControl store={showQuoteMarks} label="Quotes" />
 
       {#if isBrandTheme}
-        <div class="w-px h-8 bg-black/10 mx-1"></div>
-
-        <ToggleControl store={isDarkMode} label="Dark Mode" />
-        <ToggleControl store={showBrandLogo} label="Logo" />
+        <div
+          class="flex items-center gap-2 sm:gap-4 md:gap-6"
+          in:slideX={{ duration: 250, easing: quintOut }}
+          out:slideX={{ duration: 200, easing: quintIn }}
+        >
+          <div class="w-px h-12 bg-black/10 rounded-full shrink-0"></div>
+          <ToggleControl store={isDarkMode} label="Dark Mode" />
+          <ToggleControl store={showBrandLogo} label="Logo" />
+        </div>
       {/if}
     </div>
   </div>
