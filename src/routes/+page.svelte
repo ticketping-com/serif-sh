@@ -101,7 +101,7 @@
             <div class="border border-black/10 rounded-full flex items-center justify-center">
               <TicketpingLogoMark class="w-5 h-5" />
             </div>
-            <TicketpingWordmark class="h-4 w-auto mt-px pt-px" />
+            <TicketpingWordmark class="hidden sm:block h-4 w-auto mt-px pt-px" />
           </a>
         </div>
       </div>
@@ -125,7 +125,7 @@
             <path d="M12 16v-4" />
             <path d="M12 8h.01" />
           </svg>
-          About
+          <span class="hidden sm:inline">About</span>
         </button>
         <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
       </div>

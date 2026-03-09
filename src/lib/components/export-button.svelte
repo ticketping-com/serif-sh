@@ -1,7 +1,7 @@
+
 <script lang="ts">
   import { createEventDispatcher } from 'svelte'
-  import { scale } from 'svelte/transition'
-  import { cubicOut, cubicIn } from 'svelte/easing'
+
   import {
     exportToPng,
     exportToSvg,
@@ -24,7 +24,6 @@
   let showDropdown = false
 
   $: clipboardSupported = browser && isPngClipboardSupported()
-  $: reducedMotion = browser && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   function getFilename(): string {
     const author = get(authorName)
@@ -207,11 +206,8 @@
   {#if showDropdown}
     {@const itemClass = "group w-full px-2 py-1.5 text-left text-[13px] text-ink-800 hover:text-ink-950 hover:bg-parchment-100 rounded-lg h-9 flex items-center gap-2 transition-colors duration-150"}
     <div
-      in:scale={{ duration: reducedMotion ? 0 : 150, start: 0.95, easing: cubicOut }}
-      out:scale={{ duration: reducedMotion ? 0 : 100, start: 0.95, easing: cubicIn }}
-      style="transform-origin: top right"
-      class="absolute right-0 top-full mt-1.5 w-48 p-1 rounded-xl z-50
-        bg-white border border-black/10 shadow-xs"
+      class="export-dropdown--open absolute right-0 top-full mt-1.5 w-48 p-1 rounded-xl z-50
+        bg-parchment-50 border border-black/10 shadow-xs"
     >
       <button class={itemClass} on:click={handleExportPng}>
         {@render menuIcon(pngIcon)}
