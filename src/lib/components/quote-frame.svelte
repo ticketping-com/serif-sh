@@ -46,10 +46,26 @@
   }[$alignment]
 
   function handleKeyDown(e: KeyboardEvent) {
-    // Prevent newlines in author field
     if (e.key === 'Enter' && (e.target as HTMLElement).dataset.field === 'author') {
       e.preventDefault()
     }
+  }
+
+  let quoteWasFocused = false
+
+  function handleQuoteMouseDown(e: MouseEvent) {
+    quoteWasFocused = document.activeElement === e.currentTarget
+  }
+
+  function handleQuoteMouseUp(e: MouseEvent) {
+    if (quoteWasFocused) return
+    const el = e.currentTarget as HTMLElement
+    const sel = window.getSelection()
+    if (!sel) return
+    const range = document.createRange()
+    range.selectNodeContents(el)
+    sel.removeAllRanges()
+    sel.addRange(range)
   }
 
   // Use actions instead of reactive text inside contenteditable to prevent cursor resets.
@@ -139,6 +155,8 @@
     contenteditable={editable}
     use:editableStore={quoteText}
     on:keydown={handleKeyDown}
+    on:mousedown={handleQuoteMouseDown}
+    on:mouseup={handleQuoteMouseUp}
     data-placeholder="Enter your quote..."
   ></blockquote>
 {/snippet}
@@ -370,6 +388,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .quote-content {
