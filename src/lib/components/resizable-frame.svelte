@@ -76,6 +76,20 @@
 </script>
 
 <div class="resizable-frame" class:is-resizing={isResizing}>
+  <!-- Ruler showing current width -->
+  {#if isResizing && $frameWidth}
+    <div class="ruler">
+      <span>{$frameWidth} px</span>
+    </div>
+  {/if}
+
+  <!-- Reset button -->
+  {#if $frameWidth && !isResizing}
+    <div class="reset-container">
+      <button class="reset-button" onclick={resetWidth}>Set to auto width</button>
+    </div>
+  {/if}
+
   <!-- Left drag handle -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -98,25 +112,6 @@
   >
     {@render children()}
   </div>
-
-  <!-- Reset button -->
-  {#if $frameWidth && !isResizing}
-    <div class="reset-container">
-      <button class="reset-button" onclick={resetWidth}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16ZM5.35355 5.35355C5.15829 5.15829 4.84171 5.15829 4.64645 5.35355C4.45118 5.54882 4.45118 5.8654 4.64645 6.06066L6.58579 8L4.64645 9.93934C4.45118 10.1346 4.45118 10.4512 4.64645 10.6464C4.84171 10.8417 5.15829 10.8417 5.35355 10.6464L7.29289 8.70711L9.23223 10.6464C9.4275 10.8417 9.74408 10.8417 9.93934 10.6464C10.1346 10.4512 10.1346 10.1346 9.93934 9.93934L8 8L9.93934 6.06066C10.1346 5.8654 10.1346 5.54882 9.93934 5.35355C9.74408 5.15829 9.4275 5.15829 9.23223 5.35355L7.29289 7.29289L5.35355 5.35355Z" fill="currentColor"/>
-        </svg>
-        <span>Set to auto width</span>
-      </button>
-    </div>
-  {/if}
-
-  <!-- Ruler showing current width -->
-  {#if isResizing && $frameWidth}
-    <div class="ruler">
-      <span>{$frameWidth} px</span>
-    </div>
-  {/if}
 </div>
 
 <style>
@@ -171,18 +166,6 @@
     max-width: 100%;
   }
 
-  .reset-container {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    transform: translateY(100%);
-    padding-top: 0.5rem;
-    animation: fadeIn 200ms ease-out;
-  }
-
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -192,13 +175,20 @@
     }
   }
 
+  .reset-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    transform: translateY(calc(-100% - 0.25rem));
+    animation: fadeIn 200ms ease-out;
+  }
+
   .reset-button {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4em;
-    padding: 0.5em;
-    color: rgba(255, 255, 255, 0.4);
+    padding: 0;
+    color: rgba(0, 0, 0, 0.4);
     background: none;
     border: none;
     cursor: pointer;
@@ -207,14 +197,6 @@
   }
 
   .reset-button:hover {
-    color: rgba(255, 255, 255, 0.7);
-  }
-
-  :global(html:not(.dark)) .reset-button {
-    color: rgba(0, 0, 0, 0.4);
-  }
-
-  :global(html:not(.dark)) .reset-button:hover {
     color: rgba(0, 0, 0, 0.7);
   }
 
@@ -222,8 +204,8 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
-    transform: translateY(calc(100% + 1rem));
+    top: 0;
+    transform: translateY(calc(-100% - 0.25rem));
     border-left: 1px solid var(--ruler-color);
     border-right: 1px solid var(--ruler-color);
     color: var(--ruler-color);
@@ -244,7 +226,7 @@
   }
 
   :global(html:not(.dark)) .ruler > span {
-    --bg-color: #f5f5f5;
+    --bg-color: var(--color-parchment-200);
   }
 
   .ruler::before {
