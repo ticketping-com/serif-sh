@@ -1,4 +1,4 @@
-# Serifsh
+# serif.sh
 
 Create beautiful, shareable images of your favorite quotes. Choose from elegant themes, customize fonts, alignment, and padding, then export as an image.
 

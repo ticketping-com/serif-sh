@@ -2,10 +2,13 @@
   import { get } from 'svelte/store'
   import { quintOut, quintIn } from 'svelte/easing'
 
-  function slideX(node: Element, {
-    duration = 250,
-    easing: easingFn = quintOut
-  }: { duration?: number; easing?: (t: number) => number } = {}) {
+  function slideX(
+    node: Element,
+    {
+      duration = 250,
+      easing: easingFn = quintOut
+    }: { duration?: number; easing?: (t: number) => number } = {}
+  ) {
     const width = node.getBoundingClientRect().width
     return {
       duration,
@@ -70,7 +73,7 @@
 </script>
 
 <svelte:head>
-  <title>Serifsh — Beautiful Quote Snapshots</title>
+  <title>serif.sh — Beautiful Quote Snapshots</title>
   <meta
     name="description"
     content="Create beautiful, shareable images of your favorite quotes. Choose from elegant serif-styled themes."
@@ -79,7 +82,9 @@
 
 <div class="grid w-full min-h-screen grid-rows-[auto_1fr_auto]">
   <!-- Header -->
-  <header class="bg-parchment-50/10 border-b border-b-white/10 backdrop-filter backdrop-blur-sm shadow-sm h-[50px] px-4 py-2 z-20 w-full sticky top-0">
+  <header
+    class="bg-parchment-50/10 border-b border-b-white/10 backdrop-filter backdrop-blur-sm shadow-sm h-[50px] px-4 py-2 z-20 w-full sticky top-0"
+  >
     <div class="mx-auto flex items-center justify-between">
       <div class="flex flex-row gap-3 items-center">
         <h1 class="sr-only">serif.sh</h1>
@@ -146,7 +151,9 @@
   </main>
 
   <!-- Bottom Controls Bar -->
-  <div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pb-2 sm:px-4 sm:pb-4 pointer-events-none">
+  <div
+    class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pb-2 sm:px-4 sm:pb-4 pointer-events-none"
+  >
     <div
       class="flex items-center gap-2 sm:gap-4 md:gap-6 py-3 md:py-4 px-3 sm:px-4 md:px-6 bg-white rounded-2xl border-shadow hover:border-shadow-hover transition-shadow duration-150 pointer-events-auto overflow-x-auto md:overflow-visible scrollbar-none max-w-full"
     >
