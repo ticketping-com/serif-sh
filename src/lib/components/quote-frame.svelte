@@ -9,7 +9,7 @@
     showQuoteMarks,
     showBrandLogo
   } from '$lib/stores'
-  import { quoteText, authorName } from '$lib/stores/quote'
+  import { quoteText, authorName, hasUserEdited } from '$lib/stores/quote'
   import type { QuoteStyle } from '$lib/themes'
   import VercelWordmark from './icons/vercel-wordmark.svelte'
   import PeerlistWordMark from './icons/peerlist-wordmark.svelte'
@@ -74,6 +74,7 @@
   // Unified action for contenteditable stores
   function editableStore(node: HTMLElement, store: { subscribe: Function; set: Function }) {
     function onInput() {
+      hasUserEdited.set(true)
       store.set(node.innerText)
     }
 
@@ -358,23 +359,33 @@
   <!-- Claude terminal theme -->
   {#if theme.quoteStyle === 'claude-code'}
     <div
-      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 rounded-md md:rounded-lg card-shadow"
-      style="background-color: {theme.cardBackground || bg}; "
+      class="relative z-10 flex flex-col w-full max-w-3xl mx-auto rounded-md md:rounded-lg card-shadow overflow-hidden"
+      style="background-color: {theme.cardBackground || bg};"
     >
-      <div class="flex gap-2 mb-8" aria-hidden="true">
-        <div class="w-3.5 h-3.5 rounded-full bg-[#FF5F56]"></div>
-        <div class="w-3.5 h-3.5 rounded-full bg-[#FFBD2E]"></div>
-        <div class="w-3.5 h-3.5 rounded-full bg-[#27C93F]"></div>
+      <!-- Terminal title bar -->
+      <div
+        class="flex items-center gap-2 px-4 h-9 shrink-0"
+        style="background-color: #2d2d2d;"
+        aria-hidden="true"
+      >
+        <div class="w-3 h-3 rounded-full bg-[#FF5F56]"></div>
+        <div class="w-3 h-3 rounded-full bg-[#FFBD2E]"></div>
+        <div class="w-3 h-3 rounded-full bg-[#27C93F]"></div>
       </div>
 
-      <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
-        {@render quoteIcon('claude-code')}
-        {@render editableQuote('text-xl md:text-2xl font-light leading-snug')}
-      </div>
+      <!-- Terminal body -->
+      <div class="flex flex-col p-4 md:p-6">
+        <div class="relative z-10 flex flex-col min-h-50 {alignmentClass}">
+          {@render quoteIcon('claude-code')}
+          {@render editableQuote('text-xl md:text-2xl font-light leading-snug')}
+        </div>
 
-      <div class="flex items-center h-8 w-full mt-8">
-        <span class="mr-3 font-bold text-lg select-none" style="color: {accentColor}">&gt;</span>
-        {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
+        <div class="w-full h-[0.5px] mt-6 mb-3" style="background-color: {borderColor};"></div>
+        <div class="flex items-center h-8 w-full">
+          <span class="mr-3 font-bold text-lg select-none" style="color: {accentColor}">&gt;</span>
+          {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
+        </div>
+        <div class="w-full h-[0.5px] mt-3" style="background-color: {borderColor};"></div>
       </div>
     </div>
   {/if}

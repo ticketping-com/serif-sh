@@ -1,6 +1,7 @@
 import { writable, derived, get } from 'svelte/store';
 import { browser } from '$app/environment';
-import { THEMES, FONTS, type Theme, type Alignment, type FontFamily } from '$lib/themes';
+import { THEMES, FONTS, getThemeQuote, type Theme, type Alignment, type FontFamily } from '$lib/themes';
+import { quoteText, authorName, hasUserEdited } from './quote';
 
 // Helper to sync store with URL hash
 function createHashStore<T>(
@@ -67,15 +68,30 @@ export const alignment = createHashStore<Alignment>(
   (str) => str as Alignment
 );
 
-// Apply theme's default alignment when theme changes
+// Apply theme's default alignment and per-theme quote when theme changes
 if (browser) {
   let initialized = false;
   selectedTheme.subscribe(($theme) => {
     if (!initialized) {
       initialized = true;
+      // Don't override alignment on first load (already restored from URL).
+      // But DO apply the theme's quote if there's no custom one in the URL.
+      if (!get(hasUserEdited)) {
+        const themeQuote = getThemeQuote($theme.id);
+        quoteText.setSilent(themeQuote.text);
+        authorName.setSilent(themeQuote.author);
+      }
       return;
     }
+
     alignment.set($theme.defaultAlignment || 'center');
+
+    // Swap the per-theme quote only when the user hasn't typed anything themselves.
+    if (!get(hasUserEdited)) {
+      const themeQuote = getThemeQuote($theme.id);
+      quoteText.setSilent(themeQuote.text);
+      authorName.setSilent(themeQuote.author);
+    }
   });
 }
 
