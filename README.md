@@ -2,26 +2,6 @@
 
 Create beautiful, shareable images of your favorite quotes. Choose from elegant themes, customize fonts, alignment, and padding, then export as an image.
 
-## Themes
-
-**Brand themes** (with light/dark toggle):
-
-| Theme | Style | Accent | Font |
-|-------|-------|--------|------|
-| Vercel | Brutalist | Blue | Geist |
-| Peerlist | Startup | Green | Instrument Serif / Geist |
-
-**Standalone themes:**
-
-| Theme | Style | Description | Font |
-|-------|-------|-------------|------|
-| Editorial | Editorial | Ivory background, classic feel | Playfair / Inter |
-| Breeze | Breeze | Blue-to-white gradient | Old Standard TT / Inter |
-| Aura | Aura | Orange-to-purple gradient | Inter |
-| Noir | Noir | Black with yellow quote marks | Playfair / Inter |
-| Glass | Glass | Grey-to-black gradient | Old Standard TT / Inter |
-| Claude Code | Claude Code | Terracotta monospace | JetBrains Mono |
-
 ## Setup
 
 ```bash
