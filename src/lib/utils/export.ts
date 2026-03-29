@@ -8,26 +8,34 @@ const defaultOptions = {
   filter: imageFilter,
   pixelRatio: 2,
   skipAutoScale: true,
+  skipFonts: true,
 };
+
+function triggerDownload(href: string, filename: string) {
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = href;
+  link.rel = 'noopener';
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  requestAnimationFrame(() => {
+    link.remove();
+  });
+}
 
 export async function exportToPng(node: HTMLElement, filename: string = 'quote'): Promise<void> {
   // Double render to fix occasional issues
   await toPng(node, defaultOptions);
   const dataUrl = await toPng(node, defaultOptions);
 
-  const link = document.createElement('a');
-  link.download = `${filename}.png`;
-  link.href = dataUrl;
-  link.click();
+  triggerDownload(dataUrl, `${filename}.png`);
 }
 
 export async function exportToSvg(node: HTMLElement, filename: string = 'quote'): Promise<void> {
   const dataUrl = await toSvg(node, defaultOptions);
 
-  const link = document.createElement('a');
-  link.download = `${filename}.svg`;
-  link.href = dataUrl;
-  link.click();
+  triggerDownload(dataUrl, `${filename}.svg`);
 }
 
 export async function copyToClipboard(node: HTMLElement): Promise<void> {

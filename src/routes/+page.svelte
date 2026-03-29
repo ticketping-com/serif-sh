@@ -42,8 +42,8 @@
   let frameRef: HTMLDivElement | null = null
   let toast: { message: string; type?: 'success' | 'error' } | null = null
 
-  function handleToast(event: CustomEvent<{ message: string; type?: 'success' | 'error' }>) {
-    toast = event.detail
+  function handleToast(detail: { message: string; type?: 'success' | 'error' }) {
+    toast = detail
   }
 
   function clearToast() {
@@ -132,7 +132,7 @@
           </svg>
           <span class="hidden sm:inline">About</span>
         </button>
-        <ExportButton {frameRef} variant="navbar" on:toast={handleToast} />
+        <ExportButton {frameRef} variant="navbar" onToast={handleToast} />
       </div>
     </div>
   </header>
