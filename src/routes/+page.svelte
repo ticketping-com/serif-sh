@@ -42,6 +42,10 @@
   let frameRef: HTMLDivElement | null = null
   let toast: { message: string; type?: 'success' | 'error' } | null = null
 
+  $: toastProps = toast
+    ? { message: toast.message, type: (toast.type ?? 'info') as 'success' | 'error' | 'info' }
+    : null
+
   function handleToast(detail: { message: string; type?: 'success' | 'error' }) {
     toast = detail
   }
@@ -178,8 +182,8 @@
   </div>
 </div>
 
-{#if toast}
-  <Toast message={toast.message} type={toast.type || 'info'} onClose={clearToast} />
+{#if toastProps}
+  <Toast message={toastProps.message} type={toastProps.type} onClose={clearToast} />
 {/if}
 
 <AboutModal bind:open={aboutOpen} />
