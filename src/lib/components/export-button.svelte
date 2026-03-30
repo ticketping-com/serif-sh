@@ -1,7 +1,5 @@
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte'
-
   import {
     exportToPng,
     exportToSvg,
@@ -11,14 +9,18 @@
   import { quoteText, authorName } from '$lib/stores/quote'
   import { selectedThemeId, copyShareableUrl } from '$lib/stores'
   import { get } from 'svelte/store'
+  import { tick } from 'svelte'
   import { browser } from '$app/environment'
 
   export let frameRef: HTMLDivElement | null = null
   export const variant: 'default' | 'navbar' = 'default'
 
-  const dispatch = createEventDispatcher<{
-    toast: { message: string; type?: 'success' | 'error' }
-  }>()
+  export let onToast: ((detail: { message: string; type?: 'success' | 'error' }) => void) | undefined =
+    undefined
+
+  function emitToast(detail: { message: string; type?: 'success' | 'error' }) {
+    onToast?.(detail)
+  }
 
   let isExporting = false
   let showDropdown = false
@@ -59,15 +61,16 @@
     if (!frameRef || isExporting) return
     isExporting = true
     showDropdown = false
+    await tick()
 
     try {
-      dispatch('toast', { message: 'Exporting PNG...' })
+      emitToast({ message: 'Exporting PNG...' })
       await exportToPng(frameRef, getFilename())
       trackExport('png')
-      dispatch('toast', { message: 'PNG exported!', type: 'success' })
+      emitToast({ message: 'PNG exported!', type: 'success' })
     } catch (error) {
       console.error('Export failed:', error)
-      dispatch('toast', { message: 'Export failed', type: 'error' })
+      emitToast({ message: 'Export failed', type: 'error' })
     } finally {
       isExporting = false
     }
@@ -77,15 +80,16 @@
     if (!frameRef || isExporting) return
     isExporting = true
     showDropdown = false
+    await tick()
 
     try {
-      dispatch('toast', { message: 'Exporting SVG...' })
+      emitToast({ message: 'Exporting SVG...' })
       await exportToSvg(frameRef, getFilename())
       trackExport('svg')
-      dispatch('toast', { message: 'SVG exported!', type: 'success' })
+      emitToast({ message: 'SVG exported!', type: 'success' })
     } catch (error) {
       console.error('Export failed:', error)
-      dispatch('toast', { message: 'Export failed', type: 'error' })
+      emitToast({ message: 'Export failed', type: 'error' })
     } finally {
       isExporting = false
     }
@@ -95,15 +99,16 @@
     if (!frameRef || isExporting) return
     isExporting = true
     showDropdown = false
+    await tick()
 
     try {
-      dispatch('toast', { message: 'Copying to clipboard...' })
+      emitToast({ message: 'Copying to clipboard...' })
       await copyToClipboard(frameRef)
       trackExport('clipboard')
-      dispatch('toast', { message: 'Copied to clipboard!', type: 'success' })
+      emitToast({ message: 'Copied to clipboard!', type: 'success' })
     } catch (error) {
       console.error('Copy failed:', error)
-      dispatch('toast', { message: 'Copy failed', type: 'error' })
+      emitToast({ message: 'Copy failed', type: 'error' })
     } finally {
       isExporting = false
     }
@@ -111,21 +116,28 @@
 
   async function handleCopyUrl() {
     showDropdown = false
+    await tick()
 
     try {
       const url = copyShareableUrl()
       await navigator.clipboard.writeText(url)
       trackExport('url')
-      dispatch('toast', { message: 'URL copied to clipboard!', type: 'success' })
+      emitToast({ message: 'URL copied to clipboard!', type: 'success' })
     } catch (error) {
       console.error('Copy URL failed:', error)
-      dispatch('toast', { message: 'Failed to copy URL', type: 'error' })
+      emitToast({ message: 'Failed to copy URL', type: 'error' })
     }
   }
 
   function handleClickOutside(event: MouseEvent) {
-    const target = event.target as HTMLElement
-    if (!target.closest('.export-dropdown')) {
+    if (!showDropdown) return
+
+    const path = event.composedPath()
+    const clickedInside = path.some(
+      (node) => node instanceof Element && node.closest('.export-dropdown')
+    )
+
+    if (!clickedInside) {
       showDropdown = false
     }
   }
@@ -135,11 +147,12 @@
 
 <div class="relative export-dropdown">
   <button
-    class="inline-flex items-center h-[30px] rounded-lg overflow-hidden text-sm font-medium bg-parchment-200/50 hover:bg-parchment-200 transition-opacity duration-150 disabled:opacity-50 cursor-pointer shadow-custom"
-    on:click|stopPropagation={() => (showDropdown = !showDropdown)}
-    disabled={isExporting}
+    class="inline-flex items-center h-[30px] rounded-lg overflow-hidden text-sm font-medium bg-parchment-200/50 hover:bg-parchment-200 transition-opacity duration-150 cursor-pointer shadow-custom"
+    class:opacity-50={isExporting}
+    on:click|stopPropagation={() => !isExporting && (showDropdown = !showDropdown)}
     aria-label="Export options"
     aria-expanded={showDropdown}
+    aria-busy={isExporting}
   >
     <span class="flex items-center gap-1.5 px-3 h-full">
       {#if isExporting}

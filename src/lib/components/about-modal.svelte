@@ -87,7 +87,7 @@
           class="flex items-center gap-2 no-underline text-ink-400 transition hover:text-ink-700"
         >
           <div class="flex items-center justify-center [&>svg]:w-6 [&>svg]:h-6">
-            <TicketpingLogoMark ariaLabel="Ticketping logo" />
+            <TicketpingLogoMark />
           </div>
           <span class="text-xs">Made by Ticketping</span>
         </a>
