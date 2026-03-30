@@ -4,11 +4,12 @@ const imageFilter = (node: HTMLElement) => {
   return !node.dataset?.ignoreInExport;
 };
 
+// Embedding fonts is required for self-hosted faces (Instrument Serif / Peerlist). skipFonts
+// disables all @font-face inlining and was reverted after it broke exports.
 const defaultOptions = {
   filter: imageFilter,
   pixelRatio: 2,
   skipAutoScale: true,
-  skipFonts: true,
 };
 
 function triggerDownload(href: string, filename: string) {
