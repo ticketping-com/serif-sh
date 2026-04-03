@@ -173,6 +173,25 @@ html {
   @apply relative overflow-hidden;
 }
 
+/* X themes: Inter + system UI stack (reads like X / Chirp; no Chirp font file) */
+.quote-card.style-x {
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.quote-card.style-x cite {
+  font-family: inherit;
+}
+
 /* Transparent pattern for no-background mode */
 .transparent-pattern {
   background-image:

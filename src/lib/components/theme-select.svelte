@@ -2,6 +2,7 @@
   import { Select } from 'bits-ui'
   import VercelLogoMark from './icons/vercel-logo-mark.svelte'
   import PeerlistLogoMark from './icons/peerlist-logo-mark.svelte'
+  import XLogoMark from './icons/x-logo-mark.svelte'
 
   type ThemeOption = {
     value: string
@@ -35,9 +36,17 @@
 
 {#snippet themeIcon(option: ThemeOption)}
   {#if option.brand === 'vercel' || option.value === 'vercel'}
-    <VercelLogoMark size={16} />
+    <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden="true">
+      <VercelLogoMark size={16} />
+    </span>
   {:else if option.brand === 'peerlist' || option.value === 'peerlist'}
-    <PeerlistLogoMark size={16} />
+    <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden="true">
+      <PeerlistLogoMark size={16} />
+    </span>
+  {:else if option.brand === 'x' || option.value === 'x'}
+    <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden="true">
+      <XLogoMark size={12} />
+    </span>
   {:else}
     <span
       class="flex items-center justify-center w-4 h-4 rounded-full border-shadow"
