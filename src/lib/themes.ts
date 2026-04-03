@@ -1,4 +1,4 @@
-export type QuoteStyle = 'brutalist' | 'startup' | 'chirp' | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
+export type QuoteStyle = 'brutalist' | 'startup' | 'chirp' | 'editorial' | 'breeze' | 'aura' | 'paper' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
 export type FontFamily = 'playfair' | 'old-standard' | 'geist' | 'inter'|'mono'|'instrument-serif';
 export type Brand = 'vercel' | 'peerlist' | 'x';
@@ -187,6 +187,21 @@ export const THEMES: Record<string, Theme> = {
     font: 'inter',
     authorFont: 'inter',
   },
+  "paper": {
+    id: 'paper',
+    name: 'Paper',
+    quoteStyle: 'paper',
+    background: '#FFFFFF',
+    backgroundImage: 'url(/paper-texture-bg.jpg)',
+    backgroundSize: 'cover',
+    text: '#3F3F46',
+    accent: '#666666',
+    quoteMark: '#A1A1A1',
+    border: '#A1A1A1',
+    font: 'inter',
+    authorFont: "inter",
+    defaultAlignment: 'left',
+  },
    "noir": {
     id: 'noir',
     name: 'Noir',
@@ -206,7 +221,7 @@ export const THEMES: Record<string, Theme> = {
     backgroundImage:'linear-gradient(140deg, rgb(177, 177, 177), rgb(24, 24, 24))',
     background: '#000000',
     text: '#FFFFFF',
-    accent: '##EDEDED',
+    accent: '#EDEDED',
     quoteMark: '#FFFFFF',
     border: '#EAEAEA',
     font: 'old-standard',
@@ -260,6 +275,10 @@ export const THEME_QUOTES: Record<string, ThemeQuote> = {
   "aura": {
     text:"We shouldn't be afraid to fail- if we are not failing we are not pushing. 80% of the stuff in the studio is not going to work. If something is not good enough, stop doing it.",
     author: "Sir Jony Ive",
+  },
+  "paper": {
+    text: "I was not born with a whole lot of natural talent... but I work hard and I never give up.",
+    author: "Rock Lee",
   },
   "noir": {
     text: "Technology is not only the thing that moves the human race forward, but its the only thing that ever has. Without technology, we're just monkeys playing in the dirt.",

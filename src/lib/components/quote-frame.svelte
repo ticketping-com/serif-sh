@@ -201,7 +201,7 @@
       <QuoteChirp color={quoteMarkColor} size={40} class="mb-4 shrink-0" />
     {:else if type === 'editorial' || type === 'noir'}
       <QuoteEditorial color={quoteMarkColor} size={40} class="mb-8 shrink-0" />
-    {:else if type === 'breeze' || type === 'aura' || type === 'glass'}
+    {:else if type === 'breeze' || type === 'aura' || type === 'glass' || type === 'paper'}
       <QuoteBreeze color={quoteMarkColor} size={40} class="mb-4 md:mb-8 shrink-0" />
     {:else if type === 'claude-code'}
       <QuoteClaude color={quoteMarkColor} size={40} class="mb-4 md:mb-8 shrink-0" />
@@ -363,6 +363,20 @@
       ></div>
 
       {@render editableAuthor('text-sm font-semibold uppercase tracking-widest')}
+    </div>
+  {/if}
+
+  <!-- Paper theme -->
+  {#if theme.quoteStyle === 'paper'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+    >
+      {@render quoteIcon('paper')}
+      {@render editableQuote('text-xl md:text-3xl font-medium italic leading-relaxed')}
+
+      <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
+
+      {@render editableAuthor('text-base font-medium uppercase tracking-wider mr-4')}
     </div>
   {/if}
 
