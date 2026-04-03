@@ -33,7 +33,7 @@
   import AboutModal from '$lib/components/about-modal.svelte'
   import SerifshLogoMark from '$lib/components/icons/serifsh-logo-mark.svelte'
   import SerifshWordmark from '$lib/components/icons/serifsh-wordmark.svelte'
-  import { showQuoteMarks, selectedThemeId, showBrandLogo } from '$lib/stores'
+  import { showQuoteMarks, selectedThemeId, showBrandLogo, showXVerifiedBadge } from '$lib/stores'
   import TicketpingLogoMark from '$lib/components/icons/ticketping-logo-mark.svelte'
   import TicketpingWordmark from '$lib/components/icons/ticketping-wordmark.svelte'
 
@@ -73,7 +73,10 @@
     }
   }
 
-  $: isBrandTheme = $selectedThemeId.includes('vercel') || $selectedThemeId.includes('peerlist')
+  $: isBrandTheme =
+    $selectedThemeId.includes('vercel') ||
+    $selectedThemeId.includes('peerlist') ||
+    $selectedThemeId.includes('x')
 </script>
 
 <svelte:head>
@@ -174,8 +177,11 @@
           out:slideX={{ duration: 200, easing: quintIn }}
         >
           <div class="w-px h-12 bg-black/10 rounded-full shrink-0"></div>
-          <ToggleControl store={isDarkMode} label="Dark Mode" />
           <ToggleControl store={showBrandLogo} label="Logo" />
+          {#if $selectedThemeId.includes('x')}
+            <ToggleControl store={showXVerifiedBadge} label="Verified" />
+          {/if}
+          <ToggleControl store={isDarkMode} label="Dark Mode" />
         </div>
       {/if}
     </div>

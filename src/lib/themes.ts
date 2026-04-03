@@ -1,7 +1,7 @@
-export type QuoteStyle = 'brutalist' | "startup" | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
+export type QuoteStyle = 'brutalist' | 'startup' | 'chirp' | 'editorial' | 'breeze' | 'aura' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
 export type FontFamily = 'playfair' | 'old-standard' | 'geist' | 'inter'|'mono'|'instrument-serif';
-export type Brand = 'vercel' | 'peerlist';
+export type Brand = 'vercel' | 'peerlist' | 'x';
 
 export interface Theme {
   id: string;
@@ -118,6 +118,34 @@ export const THEMES: Record<string, Theme> = {
     brand: 'peerlist',
     defaultAlignment: 'left',
   },
+  "x-dark": {
+    id: 'x-dark',
+    name: 'X Dark',
+    quoteStyle: 'chirp',
+    background: "#000000",
+    text: "#ffffff",
+    accent: "#71767b",
+    quoteMark: "#1D9BF0",
+    border: "#2f3336",
+    font: "inter",
+    authorFont: "inter",
+    brand: 'x',
+    defaultAlignment: 'left',
+  },
+  "x-light": {
+    id: 'x-light',
+    name: 'X Light',
+    quoteStyle: 'chirp',
+    background: "#ffffff",
+    text: "#000000",
+    accent: "#71767b",
+    quoteMark: "#1D9BF0",
+    border: "#EFF3F4",
+    font: "inter",
+    authorFont: "inter",
+    brand: 'x',
+    defaultAlignment: 'left',
+  },
   "editorial": {
     id: 'editorial',
     name: 'Editorial',
@@ -216,6 +244,10 @@ export const THEME_QUOTES: Record<string, ThemeQuote> = {
   peerlist: {
     text: "Good projects start with a domain. Not because the domain itself matters that much, but because buying it means you're starting. You're committing.",
     author: "Akash Bhadange",
+  },
+  x: {
+    text:"You guys are the magicians of the 21st century. Don't let anything hold you back. Imagination is the limit. Go out there and create some magic.",
+    author: "Elon Musk",
   },
   "editorial": {
     text: "Everyone has an idea, but it's really about executing the idea and attracting other people to help you work on the idea.",

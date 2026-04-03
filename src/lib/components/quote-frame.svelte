@@ -1,20 +1,25 @@
 <script lang="ts">
   import {
     selectedTheme,
+    selectedFontId,
     alignment,
     padding,
     currentFontCSS,
     authorFontCSS,
     showBackground,
     showQuoteMarks,
-    showBrandLogo
+    showBrandLogo,
+    showXVerifiedBadge
   } from '$lib/stores'
   import { quoteText, authorName, hasUserEdited } from '$lib/stores/quote'
   import type { QuoteStyle } from '$lib/themes'
   import VercelWordmark from './icons/vercel-wordmark.svelte'
   import PeerlistWordMark from './icons/peerlist-wordmark.svelte'
+  import XLogoMark from './icons/x-logo-mark.svelte'
+  import XVerifiedBadge from './icons/x-verified-badge.svelte'
   import QuoteBrutalist from './icons/quote-brutalist.svelte'
   import QuoteStartup from './icons/quote-startup.svelte'
+  import QuoteChirp from './icons/quote-chirp.svelte'
   import QuoteEditorial from './icons/quote-editorial.svelte'
   import QuoteBreeze from './icons/quote-breeze.svelte'
   import QuoteClaude from './icons/quote-claude.svelte'
@@ -44,6 +49,15 @@
     center: 'justify-center',
     right: 'justify-end'
   }[$alignment]
+
+  /** X brand themes use `.quote-card.style-x` */
+  $: frameFontFamily =
+    theme.brand === 'x' && !$selectedFontId ? '' : `font-family: ${$currentFontCSS};`
+
+  $: authorFontInline =
+    $authorFontCSS && (theme.brand !== 'x' || $selectedFontId)
+      ? ` font-family: ${$authorFontCSS}`
+      : ''
 
   function handleKeyDown(e: KeyboardEvent) {
     if (e.key === 'Enter' && (e.target as HTMLElement).dataset.field === 'author') {
@@ -113,7 +127,8 @@
 
 <div
   bind:this={frameRef}
-  class="quote-frame"
+  class="quote-frame quote-card"
+  class:style-x={theme.brand === 'x'}
   style="
     padding: {$padding}px;
     {hasBackgroundImage
@@ -121,7 +136,7 @@
     : isGradient
       ? `background: ${$showBackground ? bg : 'transparent'}`
       : `background-color: ${$showBackground ? bg : 'transparent'}`};
-    font-family: {$currentFontCSS};
+    {frameFontFamily}
   "
 >
   {#if !$showBackground}
@@ -165,7 +180,7 @@
 {#snippet editableAuthor(extraClass = '', fieldColor = accentColor)}
   <cite
     class="{extraClass} outline-none min-h-[1.5em] not-italic whitespace-nowrap"
-    style="color: {fieldColor};{$authorFontCSS ? ` font-family: ${$authorFontCSS}` : ''}"
+    style="color: {fieldColor};{authorFontInline}"
     contenteditable={editable}
     use:editableStore={authorName}
     on:keydown={handleKeyDown}
@@ -182,6 +197,8 @@
       <QuoteBrutalist color={quoteMarkColor} size={40} class="mb-8" />
     {:else if type === 'startup'}
       <QuoteStartup color={quoteMarkColor} size={40} class="mb-8 shrink-0" />
+    {:else if type === 'chirp'}
+      <QuoteChirp color={quoteMarkColor} size={40} class="mb-4 shrink-0" />
     {:else if type === 'editorial' || type === 'noir'}
       <QuoteEditorial color={quoteMarkColor} size={40} class="mb-8 shrink-0" />
     {:else if type === 'breeze' || type === 'aura' || type === 'glass'}
@@ -261,6 +278,33 @@
         {#if $showBrandLogo}
           <span class="mr-4 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
           <PeerlistWordMark color={textColor} size={60} />
+        {/if}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Chirp themes -->
+  {#if theme.quoteStyle === 'chirp'}
+    <div
+      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
+      style="background-color: {theme.background};"
+    >
+      {@render quoteIcon('chirp')}
+      {@render editableQuote('text-xl md:text-2xl font-normal leading-normal tracking-normal')}
+
+      <div class="w-full h-px mt-8 mb-6" style="background-color: {borderColor};"></div>
+
+      <div class="flex items-center {justifyClass} h-8 w-full gap-1">
+        <div class="flex min-w-0 items-center gap-1 mr-2">
+          {@render editableAuthor('text-sm font-medium uppercase tracking-wider')}
+          {#if $showXVerifiedBadge}
+            <XVerifiedBadge color={quoteMarkColor} size={18} />
+          {/if}
+        </div>
+
+        {#if $showBrandLogo}
+          <span class="mr-2 text-sm font-light opacity-50" style="color: {accentColor}">|</span>
+          <XLogoMark color={textColor} size={14} />
         {/if}
       </div>
     </div>

@@ -153,3 +153,5 @@ export function copyShareableUrl(): string {
 }
 
 export const showBrandLogo = writable<boolean>(true);
+
+export const showXVerifiedBadge = writable<boolean>(false);

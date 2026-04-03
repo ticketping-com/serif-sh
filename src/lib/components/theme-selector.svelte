@@ -43,6 +43,8 @@
       selectedThemeId.set('vercel-dark')
     } else if (value === 'peerlist') {
       selectedThemeId.set('peerlist-dark')
+    } else if (value === 'x') {
+      selectedThemeId.set('x-dark')
     } else {
       selectedThemeId.set(value)
     }
