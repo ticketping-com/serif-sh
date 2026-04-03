@@ -1,4 +1,3 @@
-
 <script lang="ts">
   import {
     exportToPng,
@@ -15,8 +14,9 @@
   export let frameRef: HTMLDivElement | null = null
   export const variant: 'default' | 'navbar' = 'default'
 
-  export let onToast: ((detail: { message: string; type?: 'success' | 'error' }) => void) | undefined =
-    undefined
+  export let onToast:
+    | ((detail: { message: string; type?: 'success' | 'error' }) => void)
+    | undefined = undefined
 
   function emitToast(detail: { message: string; type?: 'success' | 'error' }) {
     onToast?.(detail)
@@ -65,6 +65,9 @@
 
     try {
       emitToast({ message: 'Exporting PNG...' })
+      // Small delay to let the toast show up before blocking main thread
+      await new Promise((r) => setTimeout(r, 100))
+
       await exportToPng(frameRef, getFilename())
       trackExport('png')
       emitToast({ message: 'PNG exported!', type: 'success' })
@@ -72,7 +75,10 @@
       console.error('Export failed:', error)
       emitToast({ message: 'Export failed', type: 'error' })
     } finally {
-      isExporting = false
+      // Give the browser a moment before allowing another export/interaction
+      setTimeout(() => {
+        isExporting = false
+      }, 500)
     }
   }
 
@@ -84,6 +90,8 @@
 
     try {
       emitToast({ message: 'Exporting SVG...' })
+      await new Promise((r) => setTimeout(r, 100))
+
       await exportToSvg(frameRef, getFilename())
       trackExport('svg')
       emitToast({ message: 'SVG exported!', type: 'success' })
@@ -91,7 +99,9 @@
       console.error('Export failed:', error)
       emitToast({ message: 'Export failed', type: 'error' })
     } finally {
-      isExporting = false
+      setTimeout(() => {
+        isExporting = false
+      }, 500)
     }
   }
 
@@ -103,6 +113,8 @@
 
     try {
       emitToast({ message: 'Copying to clipboard...' })
+      await new Promise((r) => setTimeout(r, 100))
+
       await copyToClipboard(frameRef)
       trackExport('clipboard')
       emitToast({ message: 'Copied to clipboard!', type: 'success' })
@@ -110,7 +122,9 @@
       console.error('Copy failed:', error)
       emitToast({ message: 'Copy failed', type: 'error' })
     } finally {
-      isExporting = false
+      setTimeout(() => {
+        isExporting = false
+      }, 500)
     }
   }
 
@@ -212,12 +226,13 @@
       stroke-width="1.75"
       stroke-linecap="round"
       stroke-linejoin="round"
-      viewBox="0 0 24 24"
-    >{@render children()}</svg>
+      viewBox="0 0 24 24">{@render children()}</svg
+    >
   {/snippet}
 
   {#if showDropdown}
-    {@const itemClass = "group w-full px-2 py-1.5 text-left text-[13px] text-ink-800 hover:text-ink-950 hover:bg-parchment-100 rounded-lg h-9 flex items-center gap-2 transition-colors duration-150"}
+    {@const itemClass =
+      'group w-full px-2 py-1.5 text-left text-[13px] text-ink-800 hover:text-ink-950 hover:bg-parchment-100 rounded-lg h-9 flex items-center gap-2 transition-colors duration-150'}
     <div
       class="export-dropdown--open absolute right-0 top-full mt-1.5 w-48 p-1 rounded-xl z-50
         bg-parchment-50 border border-black/10 shadow-xs"
