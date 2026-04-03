@@ -15,18 +15,24 @@
 
   // Reset dismiss timer when copy or duration changes (onMount alone left a stale timer).
   $effect(() => {
-    void message
-    void type
-    void duration
-    const id = setTimeout(onClose, duration)
-    return () => clearTimeout(id)
+    // track dependencies explicitly
+    const m = message;
+    const t = type;
+    const d = duration;
+    
+    if (m) {
+      const id = setTimeout(() => {
+        onClose();
+      }, d);
+      return () => clearTimeout(id);
+    }
   })
 </script>
 
 <div
   class="fixed bottom-4 right-4 z-50"
-  in:fly|local={{ y: 20, duration: 200 }}
-  out:fade|local={{ duration: 150 }}
+  in:fly={{ y: 20, duration: 200 }}
+  out:fade={{ duration: 150 }}
 >
   <div
     class="px-4 py-3 rounded-lg shadow-lg flex items-center gap-3
