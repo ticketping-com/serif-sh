@@ -112,7 +112,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				platform: 'peerlist',
 				isLong: rawText.length > 200
 			});
-			}
+		}
 
 		throw error(400, 'Unsupported platform');
 	} catch (e: any) {
