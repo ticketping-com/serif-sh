@@ -33,11 +33,15 @@
   import AboutModal from '$lib/components/about-modal.svelte'
   import SerifshLogoMark from '$lib/components/icons/serifsh-logo-mark.svelte'
   import SerifshWordmark from '$lib/components/icons/serifsh-wordmark.svelte'
+  import ImportModal from '$lib/components/import-modal.svelte'
+  import InfoIcon from '$lib/components/icons/info.svelte'
+  import SocialLinkIcon from '$lib/components/icons/social-link.svelte'
   import { showQuoteMarks, selectedThemeId, showBrandLogo, showXVerifiedBadge } from '$lib/stores'
   import TicketpingLogoMark from '$lib/components/icons/ticketping-logo-mark.svelte'
   import TicketpingWordmark from '$lib/components/icons/ticketping-wordmark.svelte'
 
   let aboutOpen = false
+  let importOpen = false
 
   let frameRef: HTMLDivElement | null = null
   let toast: { message: string; type?: 'success' | 'error' } | null = null
@@ -124,27 +128,28 @@
           </a>
         </div>
       </div>
-      <div class="flex items-center gap-2">
+
+      <div class="flex items-center">
         <button
-          class="flex items-center gap-1.5 text-sm font-medium text-ink-500 hover:text-ink-800 transition-all duration-150 cursor-pointer px-3 h-[30px] rounded-lg hover:bg-parchment-200 hover:shadow-custom"
+          class="group flex items-center gap-1.5 text-sm font-medium transition-all duration-150 ease-out cursor-pointer px-2 sm:px-3 h-[30px] rounded-lg hover:bg-parchment-200 hover:shadow-custom"
           on:click={() => (aboutOpen = true)}
         >
-          <svg
-            aria-hidden="true"
-            width="15"
-            height="15"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+          <InfoIcon
+            class="text-ink-400 group-hover:text-ink-500 size-5 transition-colors duration-150 ease-out"
+          />
+          <span
+            class="hidden sm:inline text-ink-600 group-hover:text-ink-700 transition-colors duration-150 ease-out"
+            >About</span
           >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
-          <span class="hidden sm:inline">About</span>
+        </button>
+        <button
+          class="group flex items-center gap-1.5 text-sm font-medium transition-all duration-150 ease-out cursor-pointer px-2 sm:px-3 h-[30px] rounded-lg hover:bg-parchment-200 hover:shadow-custom"
+          on:click={() => (importOpen = true)}
+        >
+          <SocialLinkIcon class="text-ink-400 group-hover:text-ink-500 size-5 transition-colors duration-150 ease-out" />
+          <span class="hidden sm:inline text-ink-600 group-hover:text-ink-700 transition-colors duration-150 ease-out"
+            >Import From Social</span
+          >
         </button>
         <ExportButton {frameRef} variant="navbar" onToast={handleToast} />
       </div>
@@ -200,3 +205,4 @@
 {/if}
 
 <AboutModal bind:open={aboutOpen} />
+<ImportModal bind:open={importOpen} />

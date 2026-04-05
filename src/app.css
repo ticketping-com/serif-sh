@@ -258,7 +258,7 @@ html {
 }
 
 .shadow-custom{
-  @apply shadow-[0px_0px_0px_1px_#e8dcc7,0px_1px_2px_-1px_#0000001a,0px_2px_4px_0px_#00000014];
+  @apply shadow-[0px_0px_0px_1px_inset_#e8dcc7,0px_1px_2px_-1px_#0000001a,0px_2px_4px_0px_#00000014];
 }
 
  .border-shadow {

@@ -31,13 +31,19 @@ export const GET: RequestHandler = async ({ url }) => {
 			}
 			const data = await res.json();
 			const pMatch = data.html.match(/<p[^>]*>(.*?)<\/p>/s);
-			let rawText = pMatch ? pMatch[1] : data.html;
+			const rawHtml = pMatch ? pMatch[1] : data.html;
+
+			// Detect truncation before stripping tags
+			const isTruncated = rawHtml.includes('…') || rawHtml.includes('&hellip;');
 			
-			rawText = decodeEntities(rawText.replace(/<[^>]*>/g, ' '))
+			let rawText = decodeEntities(rawHtml.replace(/<[^>]*>/g, ' '))
 				.replace(/\s+/g, ' ')
 				.trim();
 			
 			// Validation Heuristics
+			if (isTruncated) {
+				throw error(400, 'This post is too long (Long-form). We can only import full, short posts.');
+			}
 			if (hasTwitterMedia(rawText)) {
 				throw error(400, 'This post contains media (images/video) which is not supported for quotes.');
 			}
@@ -55,7 +61,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				text: rawText,
 				author: data.author_name,
 				platform: 'x',
-				isLong: rawText.length > 300
+				isLong: rawText.length > 200
 			});
 		}
 
@@ -86,7 +92,7 @@ export const GET: RequestHandler = async ({ url }) => {
 				throw error(400, 'This Peerlist post contains media which is not supported for quotes.');
 			}
 
-			let rawText = data.description || '';
+			let rawText = data.description || data.text || '';
 			rawText = decodeEntities(rawText);
 
 			// Validation Heuristics
@@ -104,9 +110,9 @@ export const GET: RequestHandler = async ({ url }) => {
 				text: rawText,
 				author: data.author || '',
 				platform: 'peerlist',
-				isLong: rawText.length > 300
+				isLong: rawText.length > 200
 			});
-		}
+			}
 
 		throw error(400, 'Unsupported platform');
 	} catch (e: any) {

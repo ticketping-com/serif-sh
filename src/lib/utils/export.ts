@@ -53,7 +53,6 @@ export async function exportToSvg(node: HTMLElement, filename: string = 'quote')
     await document.fonts.ready;
   }
   
-  const { toSvg } = await import('html-to-image');
   const dataUrl = await toSvg(node, defaultOptions);
   
   const response = await fetch(dataUrl);

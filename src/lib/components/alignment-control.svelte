@@ -1,6 +1,9 @@
 <script lang="ts">
   import { alignment } from '$lib/stores';
   import type { Alignment } from '$lib/themes';
+  import AlignLeft from '$lib/components/icons/align-left.svelte'
+  import AlignCenter from '$lib/components/icons/align-center.svelte'
+  import AlignRight from '$lib/components/icons/align-right.svelte'
 
   const alignments: { id: Alignment; label: string }[] = [
     { id: 'left', label: 'Align left' },
@@ -10,34 +13,22 @@
 </script>
 
 <div class="flex flex-col gap-1.5">
-  <span class="text-[10px] font-medium uppercase tracking-wide opacity-50">Align</span>
+  <span class="text-[10px] text-ink-700 font-medium uppercase tracking-wide">Align</span>
   <div class="flex items-center bg-parchment-50 gap-0.5 h-8 p-1 border-shadow hover:border-shadow-hover transition-shadow duration-150 rounded-lg">
     {#each alignments as align}
       <button
-        class="flex items-center justify-center py-1 px-1.5 bg-transparent border-none rounded-sm cursor-pointer transition-all duration-150 opacity-50 hover:opacity-80 hover:bg-parchment-200 [&.active]:opacity-100 [&.active]:bg-parchment-300 [&>svg]:w-4 [&>svg]:h-4"
+        class="flex items-center justify-center py-1 px-1.5 border-none rounded-sm cursor-pointer transition-colors duration-150 ease-out text-ink-700 [&.active]:text-ink-900 hover:bg-parchment-200 [&.active]:bg-parchment-300 [&>svg]:w-4 [&>svg]:h-4"
         class:active={$alignment === align.id}
         on:click={() => alignment.set(align.id)}
         title={align.label}
         aria-label={align.label}
       >
         {#if align.id === 'left'}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="3" y1="12" x2="15" y2="12"/>
-            <line x1="3" y1="18" x2="18" y2="18"/>
-          </svg>
+          <AlignLeft />
         {:else if align.id === 'center'}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="6" y1="12" x2="18" y2="12"/>
-            <line x1="4" y1="18" x2="20" y2="18"/>
-          </svg>
+          <AlignCenter />
         {:else}
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <line x1="9" y1="12" x2="21" y2="12"/>
-            <line x1="6" y1="18" x2="21" y2="18"/>
-          </svg>
+          <AlignRight />
         {/if}
       </button>
     {/each}

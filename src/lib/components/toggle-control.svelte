@@ -6,7 +6,7 @@
 </script>
 
 <div class="flex flex-col gap-1.5">
-  <span class="text-[10px] font-medium uppercase tracking-wide opacity-50 whitespace-nowrap"
+  <span class="text-[10px] text-ink-700 font-medium uppercase tracking-wide whitespace-nowrap"
     >{label}</span
   >
   <div class="flex items-center h-8">

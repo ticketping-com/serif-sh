@@ -3,6 +3,7 @@
   import VercelLogoMark from './icons/vercel-logo-mark.svelte'
   import PeerlistLogoMark from './icons/peerlist-logo-mark.svelte'
   import XLogoMark from './icons/x-logo-mark.svelte'
+  import ChevronDown from '$lib/components/icons/chevron-down.svelte'
 
   type ThemeOption = {
     value: string
@@ -57,7 +58,7 @@
 
 <div class="flex flex-col gap-1.5">
   {#if label}
-    <span class="text-[10px] font-medium uppercase tracking-wide opacity-50">{label}</span>
+    <span class="text-[10px] text-ink-700 font-medium uppercase tracking-wide">{label}</span>
   {/if}
   <Select.Root type="single" value={value as never} {onValueChange} bind:open>
     <Select.Trigger
@@ -67,22 +68,9 @@
       {#if selectedOption}
         {@render themeIcon(selectedOption)}
       {/if}
-      <svg
-        class="chevron transition-transform duration-150 {open ? 'rotate-180' : ''}"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M4 10L8 6L12 10"
-          stroke="black"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
+      <ChevronDown
+        class="size-4.5 text-ink-500 transition-transform duration-150 {open ? 'rotate-180' : ''}"
+      />
     </Select.Trigger>
     <Select.Portal>
       <Select.Content
