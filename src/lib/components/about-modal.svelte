@@ -1,6 +1,7 @@
 <script lang="ts">
   import TicketpingLogoMark from './icons/ticketping-logo-mark.svelte'
-  import TicketpingWordmark from './icons/ticketping-wordmark.svelte'
+  import XLogoMark from './icons/x-logo-mark.svelte'
+  import CloseIcon from '$lib/components/icons/close.svelte'
 
   export let open = false
 
@@ -22,94 +23,78 @@
 {#if open}
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div
-    class="fixed inset-0 z-200 flex items-center justify-center p-4"
-    on:click={handleBackdropClick}
+    class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+    on:click|self={handleBackdropClick}
   >
-    <div class="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
-
     <div
-      class="modal relative w-full max-w-md rounded-2xl border border-parchment-300 bg-parchment-50 text-ink-900 shadow-2xl overflow-hidden"
+      class="modal relative w-full max-w-md p-6 bg-parchment-100 rounded-3xl border border-parchment-500 overflow-hidden transition-all duration-300 transform scale-100 shadow-sm"
     >
-      <button
-        class="absolute top-4 right-4 flex h-7 w-7 items-center justify-center rounded-lg text-ink-400 transition hover:bg-parchment-200 hover:text-ink-800"
-        on:click={close}
-        aria-label="Close"
-      >
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold text-ink-900">About</h2>
+        <button
+          on:click={close}
+          class="group flex items-center justify-center rounded-full size-7 bg-parchment-50 border border-ink-300"
+          aria-label="close"
         >
-          <path
-            d="M1 1L13 13M1 13L13 1"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
+          <CloseIcon
+            class="size-5 text-ink-400 group-hover:text-ink-500 transition-colors ease-out duration-200"
           />
-        </svg>
-      </button>
-
-      <div class="p-6 pb-5">
-        <h2 class="text-base font-semibold mb-3">About</h2>
-        <div class="space-y-3 text-sm leading-relaxed text-ink-600">
-          <p>serif.sh is a tool to create beautiful, shareable images of your favorite quotes.</p>
-          <p>
-            Pick a theme from a range of styles and backgrounds, customize the font, alignment, and
-            padding.
-          </p>
-          <p>
-            When you're ready, click export to save the image as a PNG, SVG or copy it to your
-            clipboard.
-          </p>
-          <p>
-            If you have any questions or feedback, write to us on <a
-              href="https://x.com/ticketpingcom"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="underline text-ink-800 hover:text-ink-900 transition-colors">X</a
-            >
-            or
-            <a
-              href="mailto:ravi@ticketping.com"
-              class="underline text-ink-800 hover:text-ink-900 transition-colors">email us</a
-            >.
-          </p>
-        </div>
+        </button>
       </div>
 
-      <div class="flex items-center justify-between border-t border-parchment-200 px-6 py-4">
+      <div class="space-y-3 text-sm leading-relaxed text-ink-700 mb-4">
+        <p>serif.sh is a tool to create beautiful, shareable images of your favorite quotes.</p>
+        <p>
+          Pick a theme from a range of styles and backgrounds, customize the font, alignment, and
+          padding.
+        </p>
+        <p>
+          When you're ready, click export to save the image as a PNG, SVG or copy it to your
+          clipboard.
+        </p>
+        <p>
+          If you have any questions or feedback, write to us on <a
+            href="https://x.com/ticketpingcom"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline text-ink-900">𝕏</a
+          >
+          or
+          <a
+            aria-label="mail"
+            href="mailto:ravi@ticketping.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline font-medium text-ink-900"
+          >
+            email us</a
+          >.
+        </p>
+      </div>
+
+      <div class="my-1 -mx-4 h-px bg-black/20"></div>
+
+      <div class="flex items-center justify-between mt-4">
         <a
           href="https://ticketping.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex items-center gap-2 no-underline text-ink-400 transition hover:text-ink-700"
+          class="flex items-center gap-2 hover:underline text-ink-900 transition"
         >
-          <div class="flex items-center justify-center [&>svg]:w-6 [&>svg]:h-6">
+          <div class="flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5">
             <TicketpingLogoMark />
           </div>
-          <span class="text-xs">Made by Ticketping</span>
+          <span class="text-[13px] font-medium">Made by Ticketping</span>
         </a>
 
         <a
           href="https://x.com/ticketpingcom"
           target="_blank"
           rel="noopener noreferrer"
-          class="flex h-7 w-7 items-center justify-center rounded-lg text-ink-400 transition hover:bg-parchment-200 hover:text-ink-800"
+          class="text-ink-900 transition hover:text-ink-800"
           aria-label="Follow on X"
         >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
-            />
-          </svg>
+          <XLogoMark size={14} color={"black"} />
         </a>
       </div>
     </div>

@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { fade, fly } from 'svelte/transition';
+  import { fade, fly } from 'svelte/transition'
+  import Checkmark from '$lib/components/icons/checkmark.svelte'
+  import Alert from '$lib/components/icons/alert.svelte'
+  import Spinner from '$lib/components/icons/spinner.svelte'
 
   let {
     message = '',
@@ -17,7 +20,6 @@
   $effect(() => {
     // track dependencies explicitly
     const m = message;
-    const t = type;
     const d = duration;
     
     if (m) {
@@ -35,35 +37,17 @@
   out:fade={{ duration: 150 }}
 >
   <div
-    class="px-4 py-3 rounded-lg shadow-lg flex items-center gap-3
-      {type === 'success' ? 'bg-green-800 text-green-100' : ''}
-      {type === 'error' ? 'bg-red-800 text-red-100' : ''}
-      {type === 'info'
-      ? 'bg-ink-900 text-parchment-50 dark:bg-parchment-100 dark:text-ink-900'
-      : ''}"
+    class="px-4 py-3 rounded-xl border-shadow flex items-center gap-2
+      {type === 'success' ? 'bg-green-500 text-green-100' : ''}
+      {type === 'error' ? 'bg-red-500 text-red-100' : ''}
+      {type === 'info' ? 'bg-parchment-400 text-ink-900' : ''}"
   >
     {#if type === 'success'}
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
+      <Checkmark class="size-5" />
     {:else if type === 'error'}
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+      <Alert class="size-5" />
     {:else}
-      <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-        />
-      </svg>
+      <Spinner class="size-5 animate-spin text-ink-900" />
     {/if}
     <span class="text-sm font-medium">{message}</span>
   </div>

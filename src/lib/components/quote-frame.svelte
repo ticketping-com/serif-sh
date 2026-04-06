@@ -368,9 +368,7 @@
 
   <!-- Paper theme -->
   {#if theme.quoteStyle === 'paper'}
-    <div
-      class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
-    >
+    <div class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}">
       {@render quoteIcon('paper')}
       {@render editableQuote('text-xl md:text-3xl font-medium italic leading-relaxed')}
 
