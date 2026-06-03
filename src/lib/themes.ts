@@ -1,6 +1,6 @@
-export type QuoteStyle = 'brutalist' | 'startup' | 'chirp' | 'editorial' | 'breeze' | 'aura' | 'paper' | 'noir' | 'glass' | 'claude-code';
+export type QuoteStyle = 'brutalist' | 'startup' | 'chirp' | 'editorial' | 'breeze' | 'aura' | 'paper' | 'parchment' | 'noir' | 'glass' | 'claude-code';
 export type Alignment = 'left' | 'center' | 'right';
-export type FontFamily = 'playfair' | 'old-standard' | 'geist' | 'inter'|'mono'|'instrument-serif';
+export type FontFamily = 'playfair' | 'old-standard' | 'geist' | 'inter'| 'mono' | 'instrument-serif' | 'harry-potter';
 export type Brand = 'vercel' | 'peerlist' | 'x';
 
 export interface Theme {
@@ -52,6 +52,10 @@ export const FONTS: Record<FontFamily, { name: string; css: string }> = {
   'instrument-serif': {
     name: 'Instrument Serif',
     css: '"Instrument Serif", serif',
+  },
+  'harry-potter': {
+    name: 'Harry Potter',
+    css: '"HarryPotter", serif',
   }
 };
 
@@ -239,6 +243,21 @@ export const THEMES: Record<string, Theme> = {
     border: '#3d3d3d',
     font: 'mono',
     defaultAlignment: 'left',
+  },
+  "parchment": {
+    id: 'parchment',
+    name: 'Harry Potter',
+    quoteStyle: 'parchment',
+    background: '#BFA882',
+    backgroundImage: 'url(/harry-potter-bg.jpg)',
+    backgroundSize: 'cover',
+    text: '#1B582F',
+    accent: '#1B582F',
+    quoteMark: '#1B582F',
+    border: '#1B582F',
+    font: 'harry-potter',
+    authorFont: "harry-potter",
+    defaultAlignment: 'center',
   }
 };
 
@@ -279,6 +298,10 @@ export const THEME_QUOTES: Record<string, ThemeQuote> = {
   "paper": {
     text: "I was not born with a whole lot of natural talent... but I work hard and I never give up.",
     author: "Rock Lee",
+  },
+  "parchment": {
+    text: "It is our choices that show what we truly are, far more than our abilities.",
+    author: "Albus Dumbledore",
   },
   "noir": {
     text: "Technology is not only the thing that moves the human race forward, but its the only thing that ever has. Without technology, we're just monkeys playing in the dirt.",

@@ -54,6 +54,15 @@
   font-display: swap;
 }
 
+/* === HarryPotter Font Faces === */
+@font-face {
+  font-family: 'HarryPotter';
+  src: url('/fonts/harry-potter/HARRYP__.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* === Theme Configuration === */
 @theme {
   /* Font families */
@@ -65,6 +74,7 @@
   --font-playfair: "Playfair Display", serif;
   --font-old-standard: "Old Standard TT", serif;
   --font-instrument-serif: "Instrument Serif", serif;
+  --font-harry-potter: "HarryPotter", serif;
 
   /* Parchment colors */
   --color-parchment-50: #fdfcf9;

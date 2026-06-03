@@ -3,6 +3,7 @@
   import VercelLogoMark from './icons/vercel-logo-mark.svelte'
   import PeerlistLogoMark from './icons/peerlist-logo-mark.svelte'
   import XLogoMark from './icons/x-logo-mark.svelte'
+  import HarrypotterLogoMark from './icons/harrypotter-logo-mark.svelte'
   import ChevronDown from '$lib/components/icons/chevron-down.svelte'
 
   type ThemeOption = {
@@ -47,6 +48,10 @@
   {:else if option.brand === 'x' || option.value === 'x'}
     <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden="true">
       <XLogoMark size={12} />
+    </span>
+  {:else if option.value === 'parchment'}
+    <span class="inline-flex h-4 w-4 shrink-0 items-center justify-center" aria-hidden="true">
+      <HarrypotterLogoMark size={16} color="#1B582F" />
     </span>
   {:else}
     <span

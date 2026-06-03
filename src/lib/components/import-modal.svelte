@@ -22,9 +22,9 @@
 
   const loadingMessages = [
     'Bypassing the digital bouncers...',
+    'Negotiating with the API...',
     'Searching for the wisdom...',
-    'Polishing the pixels...',
-    'Negotiating with the API...'
+    'Polishing the pixels...'
   ]
   let currentMessageIndex = 0
   let messageInterval: any
@@ -208,45 +208,68 @@
             <div class="h-24 flex items-center justify-center mt-8">
               <div
                 class={[
-                  'px-3.5 py-2 flex gap-1.5 items-center rounded-full transition-all duration-500 ease-in-out',
-                  status === 'success' && 'bg-green-200/70',
-                  status === 'loading' && 'bg-sky-200/50',
-                  status === 'error' && 'bg-red-200/50'
+                  'text-lg font-medium flex items-center transition-all duration-500 ease-in-out px-4 py-2.5 rounded-full shadow-sm',
+                  status === 'success' && 'text-green-600 bg-green-200/70',
+                  status === 'loading' && 'text-sky-600 bg-sky-200/50',
+                  status === 'error' && 'text-red-600 bg-red-200/50'
                 ]}
               >
-                {#if status === 'success'}
-                  <span in:fly={{ x: -10, duration: 300 }}>
-                    <Checkmark class="size-6 text-green-500" />
-                  </span>
-                {:else if status === 'loading'}
-                  <span in:fly={{ x: -10, duration: 300 }} class="flex items-center">
-                    <Spinner class="size-6 text-sky-400" />
-                  </span>
-                {:else if status === 'error'}
-                  <span in:fly={{ x: -10, duration: 300 }} class="flex items-center">
-                    <span class="flex items-center animate-shake">
-                      <Alert class="size-6 text-red-500" />
+                <!-- Icon Section -->
+                <div class="mr-2.5 flex items-center shrink-0">
+                  {#if status === 'success'}
+                    <span in:fly={{ y: 8, duration: 400 }}>
+                      <Checkmark class="size-5.5 text-green-500" />
                     </span>
-                  </span>
-                {/if}
+                  {:else if status === 'loading'}
+                    <span in:fly={{ y: 8, duration: 400 }}>
+                      <Spinner class="size-5.5 text-sky-400" />
+                    </span>
+                  {:else if status === 'error'}
+                    <span in:fly={{ y: 8, duration: 400 }}>
+                      <span class="flex items-center animate-shake">
+                        <Alert class="size-5.5 text-red-500" />
+                      </span>
+                    </span>
+                  {/if}
+                </div>
 
-                {#key status}
-                  <span
-                    in:fly={{ x: status === 'loading' ? -20 : 25, duration: 300 }}
-                    class={[
-                      'text-lg font-medium',
-                      status === 'success' && 'text-green-500',
-                      status === 'loading' && 'text-sky-500',
-                      status === 'error' && 'text-red-500'
-                    ]}
-                  >
-                    {status === 'loading'
-                      ? 'Fetching post content...'
-                      : status === 'success'
-                        ? 'Success!'
-                        : 'Import Failed'}
-                  </span>
-                {/key}
+                <!-- Animated Text Pill -->
+                <div class="relative flex items-center overflow-hidden whitespace-nowrap h-7">
+                  <!-- Prefix Area -->
+                  <div class="flex items-center">
+                    <span
+                      class="transition-all duration-500 ease-in-out overflow-hidden inline-block"
+                      style:width={status === 'loading' ? '76px' : '0px'}
+                      style:opacity={status === 'loading' ? '1' : '0'}
+                      style:margin-right={status === 'loading' ? '6px' : '0px'}
+                    >
+                      Fetching
+                    </span>
+                  </div>
+
+                  <!-- Anchor -->
+                  <span class="shrink-0">Post</span>
+
+                  <!-- Suffix Area -->
+                  <div class="flex items-center">
+                    <span
+                      class="transition-all duration-500 ease-in-out overflow-hidden inline-block"
+                      style:width={status === 'success' ? '196px' : '0px'}
+                      style:opacity={status === 'success' ? '1' : '0'}
+                      style:margin-left={status === 'success' ? '6px' : '0px'}
+                    >
+                      Imported Successfully
+                    </span>
+                    <span
+                      class="transition-all duration-500 ease-in-out overflow-hidden inline-block"
+                      style:width={status === 'error' ? '118px' : '0px'}
+                      style:opacity={status === 'error' ? '1' : '0'}
+                      style:margin-left={status === 'error' ? '6px' : '0px'}
+                    >
+                      Import Failed
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -269,7 +292,7 @@
 
               {#if status === 'success'}
                 <p class="text-ink-600 text-base">Quote imported and applied successully!.</p>
-                {#if isLong}
+                {#if true}
                   <div
                     class="mt-2 p-3 shadow-custom bg-yellow-100/50 rounded-xl text-yellow-500 text-xs"
                   >
