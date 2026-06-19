@@ -115,11 +115,11 @@
         <div class="-ml-2 flex items-center relative z-10 gap-[4px]">
           <span class="text-sm opacity-50">by </span>
           <a
-            href="https://ticketping.com"
+            href="https://ticketping.com?utm_source=serifsh&utm_medium=referral&utm_campaign=navbar"
             class="inline-flex shrink-0 items-center justify-center whitespace-nowrap overflow-hidden h-[30px] gap-1.5 no-underline text-inherit px-3 pl-[8px]"
             aria-label="Ticketping"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener"
           >
             <div class="border border-black/10 rounded-full flex items-center justify-center">
               <TicketpingLogoMark class="w-5 h-5" />
@@ -146,8 +146,11 @@
           class="group flex items-center gap-1.5 text-sm font-medium transition-all duration-150 ease-out cursor-pointer px-2 sm:px-3 h-[30px] rounded-lg hover:bg-parchment-200 hover:shadow-custom"
           on:click={() => (importOpen = true)}
         >
-          <SocialLinkIcon class="text-ink-400 group-hover:text-ink-500 size-5 transition-colors duration-150 ease-out" />
-          <span class="hidden sm:inline text-ink-600 group-hover:text-ink-700 transition-colors duration-150 ease-out"
+          <SocialLinkIcon
+            class="text-ink-400 group-hover:text-ink-500 size-5 transition-colors duration-150 ease-out"
+          />
+          <span
+            class="hidden sm:inline text-ink-600 group-hover:text-ink-700 transition-colors duration-150 ease-out"
             >Import From Social</span
           >
         </button>

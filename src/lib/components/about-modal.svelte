@@ -76,9 +76,9 @@
 
       <div class="flex items-center justify-between mt-4">
         <a
-          href="https://ticketping.com"
+          href="https://ticketping.com?utm_source=serifsh&utm_medium=referral&utm_campaign=about_modal"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           class="flex items-center gap-2 hover:underline text-ink-900 transition"
         >
           <div class="flex items-center justify-center [&>svg]:w-5 [&>svg]:h-5">
@@ -94,7 +94,7 @@
           class="text-ink-900 transition hover:text-ink-800"
           aria-label="Follow on X"
         >
-          <XLogoMark size={14} color={"black"} />
+          <XLogoMark size={14} color={'black'} />
         </a>
       </div>
     </div>
