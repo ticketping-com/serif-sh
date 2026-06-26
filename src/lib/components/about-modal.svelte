@@ -87,15 +87,18 @@
           <span class="text-[13px] font-medium">Made by Ticketping</span>
         </a>
 
-        <a
-          href="https://x.com/ticketpingcom"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-ink-900 transition hover:text-ink-800"
-          aria-label="Follow on X"
-        >
-          <XLogoMark size={14} color={'black'} />
-        </a>
+        <div class="flex items-center gap-3">
+          <span class="text-[11px] text-ink-400">v{__APP_VERSION__}</span>
+          <a
+            href="https://x.com/ticketpingcom"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-ink-900 transition hover:text-ink-800"
+            aria-label="Follow on X"
+          >
+            <XLogoMark size={14} color={'black'} />
+          </a>
+        </div>
       </div>
     </div>
   </div>
