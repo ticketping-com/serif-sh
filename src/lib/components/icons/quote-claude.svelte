@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { SVGAttributes } from 'svelte/elements';
+  import type { SVGAttributes } from 'svelte/elements'
 
   interface Props extends SVGAttributes<SVGElement> {
-    color?: string;
-    size?: number;
+    color?: string
+    size?: number
   }
 
-  let { color = 'currentColor', size = 40, class: className, ...rest }: Props = $props();
+  let { color = 'currentColor', size = 40, class: className, ...rest }: Props = $props()
 </script>
 
 <svg
