@@ -155,3 +155,19 @@ export function copyShareableUrl(): string {
 export const showBrandLogo = writable<boolean>(true);
 
 export const showXVerifiedBadge = writable<boolean>(false);
+
+export const activeTextPicker = writable<{ type: 'quote' | 'author', x: number, y: number } | null>(null);
+
+export const customQuoteColor = createHashStore<string | null>(
+  'qcolor',
+  null,
+  (val) => val || '',
+  (str) => str || null
+);
+
+export const customAuthorColor = createHashStore<string | null>(
+  'acolor',
+  null,
+  (val) => val || '',
+  (str) => str || null
+);

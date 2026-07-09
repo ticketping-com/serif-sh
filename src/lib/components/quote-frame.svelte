@@ -9,7 +9,15 @@
     showBackground,
     showQuoteMarks,
     showBrandLogo,
-    showXVerifiedBadge
+    showXVerifiedBadge,
+    customBgConfig,
+    customBgStyle,
+    customBgFilter,
+    customBgOverlayStyle,
+    customBgPatternStyle,
+    customQuoteColor,
+    customAuthorColor,
+    activeTextPicker
   } from '$lib/stores'
   import { quoteText, authorName, hasUserEdited } from '$lib/stores/quote'
   import type { QuoteStyle } from '$lib/themes'
@@ -23,6 +31,8 @@
   import QuoteEditorial from './icons/quote-editorial.svelte'
   import QuoteBreeze from './icons/quote-breeze.svelte'
   import QuoteClaude from './icons/quote-claude.svelte'
+  import ResetIcon from '$lib/components/icons/reset.svelte'
+  import Tooltip from '$lib/components/tooltip.svelte'
   import QuoteParchment from './icons/quote-parchment.svelte'
 
   export let frameRef: HTMLDivElement | null = null
@@ -33,9 +43,11 @@
   $: bgImage = theme.backgroundImage || null
   $: bgSize = theme.backgroundSize || 'cover'
   $: textColor = theme.text
+  $: finalQuoteColor = $customQuoteColor || textColor
   $: accentColor = theme.accent
-  $: quoteMarkColor = theme.quoteMark
-  $: borderColor = theme.border || 'transparent'
+  $: finalAuthorColor = $customAuthorColor || accentColor || textColor
+  $: quoteMarkColor = $customQuoteColor || theme.quoteMark
+  $: borderColor = $customAuthorColor ? `${$customAuthorColor}33` : (theme.border || 'transparent')
   $: isGradient = bg.includes('gradient')
   $: hasBackgroundImage = !!bgImage && $showBackground
 
@@ -128,36 +140,89 @@
 
 <div
   bind:this={frameRef}
-  class="quote-frame quote-card"
+  class="quote-frame quote-card overflow-hidden"
   class:style-x={theme.brand === 'x'}
   style="
     padding: {$padding}px;
-    {hasBackgroundImage
-    ? `background-color: ${bg}; background-image: ${bgImage}; background-size: ${bgSize}; background-position: center;`
-    : isGradient
-      ? `background: ${$showBackground ? bg : 'transparent'}`
-      : `background-color: ${$showBackground ? bg : 'transparent'}`};
     {frameFontFamily}
   "
 >
-  {#if !$showBackground}
-    <div class="transparent-pattern absolute inset-0" data-ignore-in-export></div>
+  <!-- Background Layer -->
+  {#if $showBackground}
+    <div class="absolute inset-0 z-0 pointer-events-none" style="overflow: hidden;">
+      {#if $customBgConfig.enabled && $customBgConfig.type !== 'preset'}
+        <!-- Custom Background -->
+        {#if $customBgConfig.type === 'image' && !$customBgConfig.image.url}
+          <div
+            class="transparent-pattern absolute inset-0 w-full h-full"
+            data-ignore-in-export
+          ></div>
+        {:else}
+          <div
+            class="absolute inset-0 w-full h-full"
+            style="{$customBgStyle} {$customBgFilter}"
+          ></div>
+          {#if $customBgConfig.type === 'image' && $customBgOverlayStyle}
+            <div
+              class="absolute inset-0 w-full h-full pointer-events-none"
+              style={$customBgOverlayStyle}
+            ></div>
+          {/if}
+        {/if}
+      {:else}
+        <!-- Theme Predefined Background or Preset -->
+        <div
+          class="absolute inset-0 w-full h-full"
+          style="
+            {$customBgConfig.enabled && $customBgConfig.type === 'preset'
+            ? $customBgStyle
+            : (hasBackgroundImage
+              ? `background-color: ${bg}; background-image: ${bgImage}; background-size: ${bgSize}; background-position: center;`
+              : isGradient
+                ? `background: ${bg}`
+                : `background-color: ${bg}`)};
+          "
+        ></div>
+      {/if}
+
+      {#if theme.quoteStyle === 'aura' && (!$customBgConfig.enabled || $customBgConfig.type === 'gradient' || $customBgConfig.type === 'solid' || $customBgConfig.type === 'preset')}
+        {@render auraOverlay()}
+      {/if}
+
+      <!-- Pattern Overlay (Between base background and quote card) -->
+      {#if $customBgConfig.enabled && $customBgConfig.pattern.enabled}
+        <div
+          class="absolute inset-0 w-full h-full pointer-events-none mix-blend-normal"
+          style={$customBgPatternStyle}
+        ></div>
+      {/if}
+    </div>
+  {:else}
+    <div
+      class="transparent-pattern absolute inset-0 z-0 pointer-events-none"
+      data-ignore-in-export
+    ></div>
   {/if}
 
-  <div class="quote-content" style="color: {textColor}">
+  <div class="quote-content relative z-10 w-full" style="color: {textColor}">
     {@render quoteContent()}
   </div>
 </div>
 
 {#snippet auraOverlay()}
   {#if $showBackground}
+    {@const isSolid = $customBgConfig.enabled && $customBgConfig.type === 'solid'}
+    {@const color1 = isSolid ? $customBgConfig.solid.hex : (($customBgConfig.enabled && $customBgConfig.type === 'gradient' && $customBgConfig.gradient.stops.length > 0) ? $customBgConfig.gradient.stops[0].hex : '#A259FF')}
+    {@const color2 = isSolid ? $customBgConfig.solid.hex : (($customBgConfig.enabled && $customBgConfig.type === 'gradient' && $customBgConfig.gradient.stops.length > 1) ? $customBgConfig.gradient.stops[$customBgConfig.gradient.stops.length - 1].hex : '#FF8726')}
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div class="absolute inset-0 bg-white/50"></div>
       <div
-        class="absolute inset-0 bg-[linear-gradient(to_bottom,#A259FF_0%,#A259FF_65%,rgba(255,255,255,0.65)_100%)] opacity-60"
+        class="absolute inset-0 opacity-60"
+        style="background: linear-gradient(to bottom, {color1} 0%, {color1} 65%, rgba(255,255,255,0.65) 100%)"
       ></div>
       <div
-        class="absolute inset-0 bg-[linear-gradient(to_bottom,#FF8726_0%,rgba(255,255,255,0.65)_100%)] opacity-60"
+        class="absolute inset-0 opacity-60"
+        style="background: linear-gradient(to bottom, {color2} 0%, rgba(255,255,255,0.65) 100%)"
       ></div>
       <div
         class="absolute inset-0 bg-[radial-gradient(circle_300px_at_50%_-15%,transparent_20%,white_70%,transparent_85%,white_100%)] opacity-50 mix-blend-soft-light"
@@ -167,29 +232,84 @@
 {/snippet}
 
 {#snippet editableQuote(extraClass = '')}
-  <blockquote
-    class="{extraClass} outline-none min-h-[1.5em] w-full"
-    contenteditable={editable}
-    use:editableStore={quoteText}
-    on:keydown={handleKeyDown}
-    on:mousedown={handleQuoteMouseDown}
-    on:mouseup={handleQuoteMouseUp}
-    data-placeholder="Enter your quote..."
-  ></blockquote>
+  <div class="relative w-full group/frame">
+    <blockquote
+      class="{extraClass} outline-none min-h-[1.5em] w-full"
+      style="color: {finalQuoteColor}"
+      contenteditable={editable}
+      use:editableStore={quoteText}
+      on:keydown={handleKeyDown}
+      on:mousedown={handleQuoteMouseDown}
+      on:mouseup={handleQuoteMouseUp}
+      data-placeholder="Enter your quote..."
+    ></blockquote>
+    {#if editable}
+      <div
+        class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-custom p-1.5 flex items-center gap-1.5 z-50 transition-all opacity-0 group-focus-within/frame:opacity-100 group-hover/frame:opacity-100 pointer-events-none group-focus-within/frame:pointer-events-auto group-hover/frame:pointer-events-auto font-sans"
+        data-ignore-in-export
+      >
+        <button
+          class="group w-7 h-7 rounded-md border border-black/10 shadow-sm cursor-pointer relative shrink-0"
+          style="background-color: {finalQuoteColor}"
+          on:click={(e) => activeTextPicker.set({ type: 'quote', x: e.clientX, y: e.clientY })}
+        >
+          <Tooltip>Text color</Tooltip>
+        </button>
+        {#if $customQuoteColor}
+          <button
+            class="group relative p-1 hover:bg-parchment-200 transition-colors text-ink-500 hover:text-ink-700 rounded-md"
+            on:click={() => ($customQuoteColor = null)}
+          >
+            <ResetIcon
+              class="size-5 text-ink-400 group-hover:text-ink-500 transition-colors duration-150"
+            />
+            <Tooltip>Reset color</Tooltip>
+          </button>
+        {/if}
+      </div>
+    {/if}
+  </div>
 {/snippet}
 
-{#snippet editableAuthor(extraClass = '', fieldColor = accentColor)}
-  <cite
-    class="{extraClass} outline-none min-h-[1.5em] not-italic whitespace-nowrap"
-    style="color: {fieldColor};{authorFontInline}"
-    contenteditable={editable}
-    use:editableStore={authorName}
-    on:keydown={handleKeyDown}
-    data-field="author"
-    data-placeholder="AUTHOR"
-    role="textbox"
-    tabindex="0"
-  ></cite>
+{#snippet editableAuthor(extraClass = '', fieldColor = finalAuthorColor)}
+  <div class="relative group/frame inline-block max-w-full">
+    <cite
+      class="{extraClass} outline-none min-h-[1.5em] not-italic whitespace-nowrap block"
+      style="color: {fieldColor};{authorFontInline}"
+      contenteditable={editable}
+      use:editableStore={authorName}
+      on:keydown={handleKeyDown}
+      data-field="author"
+      data-placeholder="AUTHOR"
+      role="textbox"
+      tabindex="0"
+    ></cite>
+    {#if editable}
+      <div
+        class="absolute -top-12 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-custom p-1.5 flex items-center gap-1.5 z-50 transition-all opacity-0 group-focus-within/frame:opacity-100 group-hover/frame:opacity-100 pointer-events-none group-focus-within/frame:pointer-events-auto group-hover/frame:pointer-events-auto font-sans"
+        data-ignore-in-export
+      >
+        <button
+          class="group/btn w-7 h-7 rounded-md border border-black/10 shadow-sm cursor-pointer relative shrink-0"
+          style="background-color: {fieldColor}"
+          on:click={(e) => activeTextPicker.set({ type: 'author', x: e.clientX, y: e.clientY })}
+        >
+          <Tooltip>Text color</Tooltip>
+        </button>
+        {#if $customAuthorColor}
+          <button
+            class="group relative p-1 hover:bg-parchment-200 transition-colors text-ink-500 hover:text-ink-700 rounded-md"
+            on:click={() => ($customAuthorColor = null)}
+          >
+            <ResetIcon
+              class="size-5 text-ink-400 group-hover:text-ink-500 transition-colors duration-150"
+            />
+            <Tooltip>Reset color</Tooltip>
+          </button>
+        {/if}
+      </div>
+    {/if}
+  </div>
 {/snippet}
 
 {#snippet quoteIcon(type: QuoteStyle)}
@@ -217,7 +337,8 @@
   {#if theme.quoteStyle === 'brutalist'}
     <div
       class="relative z-10 flex w-full max-w-3xl mx-auto shadow-2xl p-4 md:p-8"
-      style="background-color: {theme.cardBackground || bg};"
+      style="background-color: {theme.cardBackground ||
+        ($customBgConfig.enabled ? 'rgba(0,0,0,0.25)' : bg)};"
     >
       <div class="relative flex flex-col w-full" style="border: 1px solid {borderColor};">
         <div class="absolute w-4 h-4 -top-2 -left-2 pointer-events-none">
@@ -268,7 +389,7 @@
   {#if theme.quoteStyle === 'startup'}
     <div
       class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
-      style="background-color: {theme.background};"
+      style="background-color: {$customBgConfig.enabled ? 'transparent' : theme.background};"
     >
       {@render quoteIcon('startup')}
       {@render editableQuote('text-xl md:text-3xl font-normal leading-relaxed')}
@@ -290,7 +411,7 @@
   {#if theme.quoteStyle === 'chirp'}
     <div
       class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
-      style="background-color: {theme.background};"
+      style="background-color: {$customBgConfig.enabled ? 'transparent' : theme.background};"
     >
       {@render quoteIcon('chirp')}
       {@render editableQuote('text-xl md:text-2xl font-normal leading-normal tracking-normal')}
@@ -317,7 +438,7 @@
   {#if theme.quoteStyle === 'editorial'}
     <div
       class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
-      style="background-color: {theme.background};"
+      style="background-color: {$customBgConfig.enabled ? 'transparent' : theme.background};"
     >
       {@render quoteIcon('editorial')}
       {@render editableQuote('text-xl md:text-2xl font-normal italic leading-relaxed')}
@@ -332,7 +453,8 @@
   {#if theme.quoteStyle === 'breeze'}
     <div
       class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow {alignmentClass}"
-      style="background-color: {theme.cardBackground || bg};"
+      style="background-color: {theme.cardBackground ||
+        ($customBgConfig.enabled ? 'rgba(255,255,255,0.8)' : bg)};"
     >
       <div class="relative z-10 flex flex-col min-h-50">
         {@render quoteIcon('breeze')}
@@ -350,10 +472,10 @@
 
   <!-- Aura theme -->
   {#if theme.quoteStyle === 'aura'}
-    {@render auraOverlay()}
     <div
       class="relative z-10 flex flex-col w-full max-w-3xl mx-auto p-4 md:p-8 rounded-xl md:rounded-3xl card-shadow {alignmentClass}"
-      style="background-color: {theme.cardBackground || bg};"
+      style="background-color: {theme.cardBackground ||
+        ($customBgConfig.enabled ? 'rgba(255,255,255,0.7)' : bg)};"
     >
       <div class="relative z-10 flex flex-col min-h-50">
         {@render quoteIcon('aura')}
@@ -424,7 +546,7 @@
   {#if theme.quoteStyle === 'noir'}
     <div
       class="relative flex flex-col w-full max-w-2xl mx-auto p-2 md:p-8 {alignmentClass}"
-      style="background-color: {theme.background};"
+      style="background-color: {$customBgConfig.enabled ? 'transparent' : theme.background};"
     >
       {@render quoteIcon('noir')}
       {@render editableQuote('text-xl md:text-2xl font-normal leading-relaxed')}
@@ -458,7 +580,8 @@
   {#if theme.quoteStyle === 'claude-code'}
     <div
       class="relative z-10 flex flex-col w-full max-w-3xl mx-auto rounded-md md:rounded-lg card-shadow overflow-hidden"
-      style="background-color: {theme.cardBackground || bg};"
+      style="background-color: {theme.cardBackground ||
+        ($customBgConfig.enabled ? '#1a1815' : bg)};"
     >
       <!-- Terminal title bar -->
       <div
