@@ -81,3 +81,76 @@ export async function copyToClipboard(node: HTMLElement): Promise<void> {
 export function isPngClipboardSupported(): boolean {
   return typeof ClipboardItem !== 'undefined' && typeof navigator.clipboard?.write === 'function';
 }
+
+/**
+ * Exports the node at exact target dimensions by temporarily padding it 
+ * to match the target aspect ratio, ensuring no content is clipped and 
+ * text does not reflow.
+ */
+export async function exportToPlatformSize(
+  node: HTMLElement,
+  filename: string = 'quote',
+  targetW: number,
+  targetH: number
+): Promise<void> {
+  if (typeof document !== 'undefined') {
+    await document.fonts.ready;
+  }
+
+  const currW = node.offsetWidth;
+  const currH = node.offsetHeight;
+  
+  if (!currW || !currH) throw new Error('Element has no dimensions');
+
+  const targetR = targetW / targetH;
+  const currR = currW / currH;
+
+  let newW = currW;
+  let newH = currH;
+
+  if (currR > targetR) {
+    newH = currW / targetR;
+  } else {
+    newW = currH * targetR;
+  }
+
+  // Save original inline styles
+  const originalFrameStyle = node.getAttribute('style') || '';
+  const quoteContent = node.querySelector('.quote-content') as HTMLElement;
+  const originalContentStyle = quoteContent?.getAttribute('style') || '';
+
+  try {
+    if (quoteContent) {
+      quoteContent.style.width = quoteContent.offsetWidth + 'px';
+      quoteContent.style.height = quoteContent.offsetHeight + 'px';
+      quoteContent.style.maxWidth = 'none';
+      quoteContent.style.flex = 'none';
+    }
+
+    // Apply the padded dimensions to the frame
+    node.style.width = newW + 'px';
+    node.style.height = newH + 'px';
+    node.style.display = 'flex';
+    node.style.alignItems = 'center';
+    node.style.justifyContent = 'center';
+    node.style.transition = 'none';
+
+    const pixelRatio = targetW / newW;
+
+    const blob = await toBlob(node, {
+      ...defaultOptions,
+      pixelRatio,
+      cacheBust: true, // Must bypass cache since we modified DOM styles
+    });
+
+    if (!blob) throw new Error('Failed to create image blob');
+    triggerDownload(blob, `${filename}.png`);
+
+  } finally {
+    // Always restore the original DOM state
+    node.setAttribute('style', originalFrameStyle);
+    if (quoteContent) {
+      quoteContent.setAttribute('style', originalContentStyle);
+    }
+  }
+}

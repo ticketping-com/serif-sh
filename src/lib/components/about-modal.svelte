@@ -49,9 +49,16 @@
           padding.
         </p>
         <p>
-          When you're ready, click export to save the image as a PNG, SVG or copy it to your
-          clipboard.
+          When you're ready, click export to save the image as a PNG, SVG, or copy it to your clipboard.
         </p>
+        <p>
+          <strong>Pro tip:</strong> You can export perfectly padded, high-resolution images tailored for social media without changing your design:
+        </p>
+        <ul class="list-disc pl-5 mt-1 space-y-1">
+          <li><strong>Square (1:1)</strong> or <strong>Portrait (4:5)</strong>: for X, LinkedIn, and Facebook feeds</li>
+          <li><strong>Landscape (16:9)</strong>: for link cards and banners</li>
+          <li><strong>Story (9:16)</strong>: for vertical posts</li>
+        </ul>
         <p>
           If you have any questions or feedback, write to us on <a
             href="https://x.com/ticketpingcom"
