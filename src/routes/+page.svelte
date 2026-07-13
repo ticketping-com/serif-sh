@@ -22,6 +22,7 @@
     }
   }
   import QuoteFrame from '$lib/components/quote-frame.svelte'
+  import TextColorPopup from '$lib/components/text-color-popup.svelte'
   import ThemeSelector from '$lib/components/theme-selector.svelte'
   import AlignmentControl from '$lib/components/alignment-control.svelte'
   import PaddingControl from '$lib/components/padding-control.svelte'
@@ -36,7 +37,8 @@
   import ImportModal from '$lib/components/import-modal.svelte'
   import InfoIcon from '$lib/components/icons/info.svelte'
   import SocialLinkIcon from '$lib/components/icons/social-link.svelte'
-  import { showQuoteMarks, selectedThemeId, showBrandLogo, showXVerifiedBadge } from '$lib/stores'
+  import BgController from '$lib/components/bg-controller.svelte'
+  import { showQuoteMarks, selectedThemeId, showBrandLogo, showXVerifiedBadge, customBgPanelOpen } from '$lib/stores'
   import TicketpingLogoMark from '$lib/components/icons/ticketping-logo-mark.svelte'
   import TicketpingWordmark from '$lib/components/icons/ticketping-wordmark.svelte'
 
@@ -88,6 +90,10 @@
     $selectedThemeId.includes('vercel') ||
     $selectedThemeId.includes('peerlist') ||
     $selectedThemeId.includes('x')
+
+  $: if (isBrandTheme && $customBgPanelOpen) {
+    $customBgPanelOpen = false
+  }
 </script>
 
 <svelte:head>
@@ -101,7 +107,7 @@
 <div class="grid w-full min-h-screen grid-rows-[auto_1fr_auto]">
   <!-- Header -->
   <header
-    class="bg-parchment-50/10 border-b border-b-white/10 backdrop-filter backdrop-blur-sm shadow-sm h-[50px] px-4 py-2 z-20 w-full sticky top-0"
+    class="bg-parchment-50/10 border-b border-b-white/10 backdrop-filter backdrop-blur-sm shadow-sm h-[50px] px-4 py-2 z-50 w-full sticky top-0"
   >
     <div class="mx-auto flex items-center justify-between">
       <div class="flex flex-row gap-3 items-center">
@@ -160,7 +166,7 @@
   </header>
 
   <!-- Main content - Frame area -->
-  <main class="flex items-center justify-center p-4 pt-8 pb-30">
+  <main class="flex items-center justify-center p-4 pt-8 pb-30 transition-all duration-300 {$customBgPanelOpen ? 'lg:pr-[280px]' : ''}">
     <div class="flex flex-col items-center w-full">
       <ResizableFrame>
         {#snippet children()}
@@ -174,7 +180,7 @@
 
   <!-- Bottom Controls Bar -->
   <div
-    class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pb-2 sm:px-4 sm:pb-4 pointer-events-none"
+    class="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pb-2 sm:px-4 sm:pb-4 pointer-events-none transition-all duration-300 {$customBgPanelOpen ? 'lg:pr-[280px]' : ''}"
   >
     <div
       class="flex items-center gap-2 sm:gap-4 md:gap-6 py-3 md:py-4 px-3 sm:px-4 md:px-6 bg-white rounded-2xl border-shadow hover:border-shadow-hover transition-shadow duration-150 pointer-events-auto overflow-x-auto md:overflow-visible scrollbar-none max-w-full"
@@ -184,6 +190,9 @@
       <AlignmentControl />
       <PaddingControl />
       <ToggleControl store={showQuoteMarks} label="Quotes" />
+      {#if !isBrandTheme}
+        <ToggleControl store={customBgPanelOpen} label="Custom BG" />
+      {/if}
 
       {#if isBrandTheme}
         <div
@@ -207,5 +216,7 @@
   <Toast message={toastMessage} type={toastType} onClose={clearToast} />
 {/if}
 
+<BgController />
 <AboutModal bind:open={aboutOpen} />
 <ImportModal bind:open={importOpen} />
+<TextColorPopup />

@@ -2,6 +2,7 @@
   import {
     exportToPng,
     exportToSvg,
+    exportToPlatformSize,
     copyToClipboard,
     isPngClipboardSupported
   } from '$lib/utils/export'
@@ -71,7 +72,6 @@
 
     try {
       emitToast({ message: 'Exporting PNG...' })
-      // Small delay to let the toast show up before blocking main thread
       await new Promise((r) => setTimeout(r, 100))
 
       await exportToPng(frameRef, getFilename())
@@ -81,7 +81,29 @@
       console.error('Export failed:', error)
       emitToast({ message: 'Export failed', type: 'error' })
     } finally {
-      // Give the browser a moment before allowing another export/interaction
+      setTimeout(() => {
+        isExporting = false
+      }, 500)
+    }
+  }
+
+  async function handlePlatformExport(targetW: number, targetH: number, label: string) {
+    if (!frameRef || isExporting) return
+    isExporting = true
+    showDropdown = false
+    await tick()
+
+    try {
+      emitToast({ message: `Exporting ${label}...` })
+      await new Promise((r) => setTimeout(r, 100))
+
+      await exportToPlatformSize(frameRef, getFilename(), targetW, targetH)
+      trackExport('png')
+      emitToast({ message: `${label} exported!`, type: 'success' })
+    } catch (error) {
+      console.error('Export failed:', error)
+      emitToast({ message: 'Export failed', type: 'error' })
+    } finally {
       setTimeout(() => {
         isExporting = false
       }, 500)
@@ -196,12 +218,40 @@
     {@const itemClass =
       'group w-full px-2 py-1.5 text-left text-[13px] text-ink-600 hover:text-ink-700 hover:bg-parchment-200 rounded-lg h-9 flex items-center gap-2 transition-colors duration-150'}
     <div
-      class="export-dropdown--open absolute right-0 top-full mt-1.5 w-48 p-1 rounded-xl z-50
+      class="export-dropdown--open absolute right-0 top-full mt-1.5 w-60 p-1 rounded-xl z-50
         bg-parchment-50 border border-black/10 shadow-xs"
     >
+      <div class="px-2 pt-1.5 pb-1 text-[10px] font-bold tracking-wider text-ink-400 uppercase">
+        Social Media Sizes
+      </div>
+      
+      <button class={itemClass} on:click={() => handlePlatformExport(1080, 1080, 'Square (1:1)')}>
+        <span class="flex-1">Square (1:1)</span>
+        <span class="text-[10px] text-ink-400 font-medium">1080×1080</span>
+      </button>
+      
+      <button class={itemClass} on:click={() => handlePlatformExport(1080, 1350, 'Portrait (4:5)')}>
+        <span class="flex-1">Portrait (4:5)</span>
+        <span class="text-[10px] text-ink-400 font-medium">1080×1350</span>
+      </button>
+
+      <button class={itemClass} on:click={() => handlePlatformExport(1920, 1080, 'Landscape (16:9)')}>
+        <span class="flex-1">Landscape (16:9)</span>
+        <span class="text-[10px] text-ink-400 font-medium">1920×1080</span>
+      </button>
+
+      <button class={itemClass} on:click={() => handlePlatformExport(1080, 1920, 'Story (9:16)')}>
+        <span class="flex-1">Story (9:16)</span>
+        <span class="text-[10px] text-ink-400 font-medium">1080×1920</span>
+      </button>
+
+      <div class="my-1 -mx-1 h-px bg-black/10"></div>
+      <div class="px-2 pt-1.5 pb-1 text-[10px] font-bold tracking-wider text-ink-400 uppercase">
+        Original Size
+      </div>
+
       <button class={itemClass} on:click={handleExportPng}>
-        <ImageIcon class="size-5 text-ink-400 group-hover:text-ink-500 transition-colors duration-150" />
-        Save as PNG
+        Save as PNG (2x)
       </button>
       <button class={itemClass} on:click={handleExportSvg}>
         <ImageIcon class="size-5 text-ink-400 group-hover:text-ink-500 transition-colors duration-150" />
